@@ -1,0 +1,52 @@
+<div>
+  <div class="modal-header">
+    <h4 class="modal-title">Upload Avatar Image</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Please use the buttons below to pick and preview the profile image you want shown on your account and use the view-port below to crop the image as required.
+    </p>
+
+    <div class="text-center">
+      <input class="btn-sm btn btn-link m-0 p-0" style="display: none" type="file" (change)="fileChangeEvent($event)" #fileInput />
+    </div>
+
+    <image-cropper [imageChangedEvent]="imageChangedEvent"
+                   [maintainAspectRatio]="true"
+                   [aspectRatio]="1 / 1"
+                   [resizeToWidth]="360"
+                   format="png"
+                   (imageCropped)="imageCropped($event)"
+                   (imageLoaded)="imageLoaded()"
+                   (cropperReady)="cropperReady()"
+                   (loadImageFailed)="loadImageFailed()"
+                   [cropperMinWidth]="180"
+                   roundCropper="true">
+    </image-cropper>
+  </div>
+
+  <ng-template #previewcontent let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Avatar Preview...</h4>
+      <button type="button" class="close" aria-label="Close" (click)="this.previewModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <img class="rounded-circle" [src]="croppedImage" />
+    </div>
+  </ng-template>
+
+  <div class="modal-footer">
+    <button *ngIf="hasSelectedImage" type="button" class="btn btn-outline-secondary" [ngbTooltip]="previewImageTipContent" placement="top" tooltipClass="tooltip-preview" (click)="openPreviewModal(previewcontent)">Preview</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Cancel</button>
+    <button *ngIf="!hasSelectedImage" type="button" (click)="fileInput.click()" class="btn btn-primary">Select Your Avatar Image</button>
+    <button *ngIf="hasSelectedImage" type="button" class="btn btn-primary" (click)="uploadAvatar()">
+      <app-spinner [isRunning]="isRequesting" [displayText]="'Saving Avatar'"></app-spinner>
+      <span [hidden]="isRequesting">Crop &amp; Upload</span>
+    </button>
+  </div>
+</div>

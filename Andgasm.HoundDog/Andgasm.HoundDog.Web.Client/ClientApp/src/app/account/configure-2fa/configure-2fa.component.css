@@ -1,0 +1,10 @@
+.my-custom-class .tooltip-inner {
+  min-width: 450px;
+  color: #670f12;
+  background-color: #f4d2d3;
+  border-color: #efbfc1
+}
+
+.my-custom-class .arrow::before {
+  border-top-color: white;
+}

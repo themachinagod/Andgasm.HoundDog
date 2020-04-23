@@ -1,0 +1,8 @@
+<div class="row p-3">
+  <div class="col-md-12">
+    <div [ngClass]="{'alert-danger': !success, 'alert-success': success}" class="alert">
+      <h3 [ngClass]="{'text-error': !success, 'text-success': success}" class="text-center">{{confirmationResultTitle}}</h3>
+      <h5 class="text-center">{{confirmationResultBody}}</h5>
+    </div>
+  </div>
+</div>

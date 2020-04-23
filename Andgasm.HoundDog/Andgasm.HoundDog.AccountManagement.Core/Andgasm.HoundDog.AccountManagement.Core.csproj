@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Andgasm.HoundDog.AccountManagement.Database\Andgasm.HoundDog.AccountManagement.Database.csproj" />
+    <ProjectReference Include="..\Andgasm.HoundDog.AccountManagement.Interfaces\Andgasm.HoundDog.AccountManagement.Interfaces.csproj" />
+    <ProjectReference Include="..\Andgasm.HoundDog.API.Interfaces\Andgasm.HoundDog.API.Interfaces.csproj" />
+    <ProjectReference Include="..\Andgasm.HoundDog.Core.Email.Interfaces\Andgasm.HoundDog.Core.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

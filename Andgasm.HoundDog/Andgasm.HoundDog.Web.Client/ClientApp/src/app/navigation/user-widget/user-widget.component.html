@@ -1,0 +1,19 @@
+<ul class="navbar-nav flex-grow">
+  <li *ngIf="isAuthenticated()" class="nav-item" [routerLinkActive]="['link-active']">
+    <a class="nav-link text-dark" [routerLink]="['/settings']">
+    </a>
+  </li>
+  <li *ngIf="isAuthenticated()" class="nav-item" [routerLinkActive]="['link-active']">
+    <div class="row">
+      <img width="42" class="img-fluid rounded-circle" [src]="avatarImage" />
+      <a class="nav-link text-dark mr-3" [routerLink]="['/settings']">{{authenticatedUserName}}</a>
+    </div>
+  </li>
+  <li *ngIf="isAuthenticated()">
+    <button class="btn btn-primary" (click)="logout()">Sign Out</button>
+  </li>
+  <li *ngIf="!isAuthenticated()">
+    <button class="btn btn-primary" (click)="register()">Register</button>&nbsp;
+    <button class="btn btn-primary" (click)="login()">Sign In</button>
+  </li>
+</ul>

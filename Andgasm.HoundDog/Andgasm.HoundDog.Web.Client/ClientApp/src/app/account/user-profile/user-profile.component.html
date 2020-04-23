@@ -1,0 +1,149 @@
+<div class="card">
+  <div class="card-header bg-white pl-0 pt-1">
+    <h4 class="card-title">{{formTitle}}</h4>
+  </div>
+
+  <div class="card-block mt-12">
+
+    <form name="userprofileform" #f="ngForm" novalidate (ngSubmit)="save(f)">
+      <input type="hidden" name="id" [(ngModel)]="currentUser.id" #id="ngModel" />
+
+      <div class="row">
+        <div class="col-md-8 mt-3">
+
+          <div class="form-group">
+            <ng-template #userNameTipContent>Your username is how others will see and identify you while using the HoundDog portal.<br /> Your username must be unique within our userbase and must be between 6 - 16 characters in length.</ng-template>
+            <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="userNameTipContent" />
+            <label for="user-name">Username</label>
+            <div>
+              <input id="user-name" type="text" required minlength="6" maxlength="16" name="userName" class="form-control" placeholder="Your user name" [disabled]="!isDataEntryMode" tmFocus
+                     [ngClass]="{'is-invalid': (errors.UserName || !userName.valid && !userName.pristine), 'is-valid': !errors.UserName && userName.valid && submitted}"
+                     [(ngModel)]="currentUser.userName" #userName="ngModel">
+              <small [hidden]="userName.valid || (userName.pristine && !submitted)" class="text-danger">Username must be between 6 and 16 characters in length</small>
+              <small *ngIf="errors.UserName" class="text-danger">{{errors.UserName}}</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <ng-template #firstNameTipContent>Your first name will not be visible to other users.<br /> Your first name must be provided.</ng-template>
+            <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="firstNameTipContent" />
+            <label for="first-name">First name</label>
+            <div>
+              <input id="first-name" type="text" required name="firstName" class="form-control" [disabled]="!isDataEntryMode" placeholder="Your first name"
+                     [ngClass]="{'is-invalid': (errors.FirstName || !firstName.valid && !firstName.pristine), 'is-valid': !errors.FirstName && firstName.valid && submitted}"
+                     [(ngModel)]="currentUser.firstName" #firstName="ngModel">
+              <small *ngIf="errors.FirstName" class="text-danger">{{errors.FirstName}}</small>
+              <small [hidden]="firstName.valid || (firstName.pristine && !submitted)" class="text-danger">First name must be supplied</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <ng-template #lastNameTipContent>Your last name will not be visible to other users.<br /> Your last name must be provided.</ng-template>
+            <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="lastNameTipContent" />
+            <label for="last-name">Last name</label>
+            <div>
+              <input id="last-name" type="text" required name="lastName" class="form-control" [disabled]="!isDataEntryMode" placeholder="Your last name"
+                     [ngClass]="{'is-invalid': (errors.LastName || !lastName.valid && !lastName.pristine), 'is-valid': !errors.LastName && lastName.valid && submitted}"
+                     [(ngModel)]="currentUser.lastName" #lastName="ngModel">
+              <small *ngIf="errors.LastName" class="text-danger">{{errors.LastName}}</small>
+              <small [hidden]="lastName.valid || (lastName.pristine && !submitted)" class="text-danger">Last name must be supplied</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mt-4 p-0 m-0 pl-3 pr-5 text-center">
+          <div *ngIf="!isDataEntryMode && hasAvatar" class="text-center">
+            <img class="img-fluid rounded-circle" [src]="avatarImageData" />
+          </div>
+          <ng-template #avatarTipContent>This will be your profile avatar image and will be visible to other users.</ng-template>
+          <img src="../../assets/icons/question_small_icon.png" class="ml-0 mr-1" [ngbTooltip]="avatarTipContent" />
+          <button *ngIf="!isDataEntryMode" type="button" (click)="openProfileImageUploadModal()" class="btn-sm btn btn-link m-0 p-0 text">Upload Profile Avatar</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ng-template #locationTipContent>Your location will be used in order to provide location specific services.<br /> Your location name must be provided.</ng-template>
+        <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="locationTipContent" />
+        <label for="location">Location</label>
+        <div>
+          <input id="location" type="text" required name="location" class="form-control" [disabled]="!isDataEntryMode" placeholder="Location"
+                 [ngClass]="{'is-invalid': (errors.Location || !location.valid && !location.pristine), 'is-valid': !errors.Location && location.valid && submitted}"
+                 [(ngModel)]="currentUser.location" #location="ngModel">
+          <small *ngIf="errors.Location" class="text-danger">{{errors.Location}}</small>
+          <small [hidden]="location.valid || (location.pristine && !submitted)" class="text-danger">Location must be supplied</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ng-template #phoneTipContent>Your phone number will be used as an additional security measure to ensure we can verify this account.<br /> Your number will not be visible to other users.<br /> Your location must be provided.</ng-template>
+        <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="phoneTipContent" />
+        <label for="phoneNumber">Phone Number</label>
+        <div>
+          <input id="phoneNumber" type="text" name="phoneNumber" validatePhone class="form-control" [disabled]="!isDataEntryMode" placeholder="Phone Number"
+                 [ngClass]="{'is-invalid': (errors.PhoneNumber || !phoneNumber.valid && !phoneNumber.pristine), 'is-valid': !errors.PhoneNumber && phoneNumber.valid && submitted}"
+                 [(ngModel)]="currentUser.phoneNumber" #phoneNumber="ngModel">
+          <small [hidden]="phoneNumber.valid || (phoneNumber.pristine && !submitted)" class="text-danger">Phone number must be a valid UK based E.164 formatted phone number... e.g. +447939948389 or 07939948389</small>
+          <small *ngIf="errors.PhoneNumber" class="text-danger">{{errors.PhoneNumber}}</small>
+        </div>
+        <div *ngIf="!isDataEntryMode && userDataInitialised">
+          <button *ngIf="!currentUser.phoneNumberConfirmed" type="button" (click)="initiateVerifyPhoneProcess()" class="btn-sm btn btn-link m-0 p-0">Verify Phone Number</button>
+          <small *ngIf="currentUser.phoneNumberConfirmed" class="text-success">Your phone number has been successfully confirmed</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ng-template #emailTipContent>Your email will be used as our primary means of communication with you as well as an additional security measure to ensure we can verify this account.<br /> Your email address will not be visible to other users.<br /> A valid email address must be provided.</ng-template>
+        <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="emailTipContent" />
+        <label for="email">Email</label>
+        <div>
+          <input id="email" type="text" required name="email" validateEmail class="form-control" [disabled]="!isDataEntryMode" placeholder="Email"
+                 [ngClass]="{'is-invalid': (errors.Email || !email.valid && !email.pristine), 'is-valid': !errors.Email && email.valid && submitted}"
+                 [(ngModel)]="currentUser.email" #email="ngModel">
+          <small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger">Please enter a valid email</small>
+          <small *ngIf="errors.Email" class="text-danger">{{errors.Email}}</small>
+        </div>
+        <div *ngIf="!isDataEntryMode && userDataInitialised">
+          <button *ngIf="!currentUser.emailConfirmed" type="button" (click)="resendEmailConfirmationEmail()" class="btn-sm btn btn-link m-0 p-0">Resend Email Address Confirmation Link</button>
+          <small *ngIf="currentUser.emailConfirmed" class="text-success">Your email address has been successfully confirmed</small>
+        </div>
+      </div>
+
+      <div *ngIf="isCreateMode">
+        <div class="form-group">
+          <ng-template #passwordTipContent>Your password is used to secure your account and should not be shared with anyone.<br /> Your Password must contain a mix of upper, lower and numeric characters and must be at least 6 characters long.<br /> A password must be provided.</ng-template>
+          <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="passwordTipContent" />
+          <label for="passwordClear">Password</label>
+          <input id="passwordClear" type="password" validatePassword name="passwordClear" class="form-control" [disabled]="!isDataEntryMode" placeholder="Password"
+                 [ngClass]="{'is-invalid': (errors.PasswordClear || !passwordClear.valid && !passwordClear.pristine), 'is-valid': !errors.PasswordClear && passwordClear.valid && submitted}"
+                 [(ngModel)]="currentUser.passwordClear" #passwordClear="ngModel">
+          <small [hidden]="passwordClear.valid || (passwordClear.pristine && !submitted)" class="text-danger">Password must contain a mix of upper, lower and numeric characters and must be at least 6 characters long</small>
+          <small *ngIf="errors.PasswordClear" class="text-danger">{{errors.PasswordClear}}</small>
+        </div>
+
+        <div class="form-group">
+          <ng-template #passwordConfirmTipContent>We use this to esnure you correctly typed your password.</ng-template>
+          <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="passwordConfirmTipContent" />
+          <label for="passwordClearConfirm">Confirm Password</label>
+          <input id="passwordClearConfirm" type="password" validateEqual="passwordClear" name="passwordClearConfirm" class="form-control" [disabled]="!isDataEntryMode" placeholder="Confirm Password"
+                 [ngClass]="{'is-invalid': (errors.PasswordClearConfirm || !passwordClearConfirm.valid && !passwordClearConfirm.pristine), 'is-valid': !errors.PasswordClearConfirm && passwordClearConfirm.valid && submitted}"
+                 [(ngModel)]="currentUser.passwordClearConfirm" #passwordClearConfirm="ngModel">
+          <small [hidden]='passwordClearConfirm.valid || (passwordClearConfirm.pristine && !submitted)' class="text-danger">The password does not match with confirm password</small>
+          <small *ngIf="errors.PasswordClearConfirm" class="text-danger">{{errors.PasswordClearConfirm}}</small>
+        </div>
+      </div>
+
+      <div class="form-group text-right">
+        <button *ngIf="isEditMode && !isCreateMode" type="button" (click)="resetFormState()" class="btn btn-outline-secondary"><i class='fa fa-edit'></i>Cancel</button>&nbsp;
+        <button *ngIf="!isDataEntryMode" type="button" (click)="changeToEditMode()" class="btn btn-outline-secondary"><i class='fa fa-edit'></i>Edit</button>
+        <button *ngIf="isDataEntryMode" type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">
+          <app-spinner [isRunning]="isRequesting" [displayText]="'Saving Profile'"></app-spinner>
+          <span [hidden]="isRequesting">{{ !isCreateMode ? "Update Profile" : "Create Profile" }}</span>
+        </button>
+      </div>
+
+      <div *ngIf="errors.ServerError" class="alert alert-danger" role="alert">
+        <strong>The server returned the following errors...</strong> <br /> {{errors.ServerError}}
+      </div>
+    </form>
+  </div>
+</div>

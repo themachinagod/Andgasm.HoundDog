@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-md-3"></div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-white pl-0 pt-1">
+        <h4 class="card-title">Verify Phone Number</h4>
+      </div>
+
+      <div class="card-block">
+
+        <form name="verifyphoneform" #f="ngForm" novalidate (ngSubmit)="verifyPhoneVerificationCode(f)">
+          <div class="form-group mt-3">
+            <label for="user-name">Please enter the verification code that was sent to your registered mobile phone. If you have not received a confirmation code please click on the resend link below:</label>
+            <div>
+              <input id="verification-code" type="text" Required name="verificationCode" class="form-control" placeholder="Verification Code" [disabled]="errors.length > 0" tmFocus
+                     [ngClass]="{'is-invalid': (errors.VerificationCode || !verificationCodea.valid && !verificationCodea.pristine), 'is-valid': !errors.VerificationCode && verificationCodea.valid && submitted}"
+                     [(ngModel)]="verificationCode" #verificationCodea="ngModel">
+              <small *ngIf="errors.VerificationCode" class="text-danger">{{errors.VerificationCode}}</small>
+            </div>
+          </div>
+
+          <div class="form-group text-right">
+            <button type="button" (click)="sendPhoneVerificationCode()" class="btn-sm btn btn-link m-0 p-0">Resend Veridication Code</button>&nbsp;
+            <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">
+              <app-spinner [isRunning]="isRequesting" [displayText]="'Verifying'"></app-spinner>
+              <span [hidden]="isRequesting">Verify</span>
+            </button>
+          </div>
+
+          <div *ngIf="errors.ServerError" class="alert alert-danger" role="alert">
+            <strong>The server returned the following errors...</strong> <br /> {{errors.ServerError}}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
