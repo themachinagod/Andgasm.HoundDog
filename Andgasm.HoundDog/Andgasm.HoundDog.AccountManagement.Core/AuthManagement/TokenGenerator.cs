@@ -19,6 +19,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         public string GenerateToken(UserDTO authenticateduser)
         {
+            if (authenticateduser == null || string.IsNullOrWhiteSpace(authenticateduser.UserName) || authenticateduser.Id == Guid.Empty || string.IsNullOrWhiteSpace(authenticateduser.Roles))
+                throw new Exception("User data must be supplied to generate token!");
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config.GetSection(ITokenGenerator.TokenConfigName).Value);
             var tokenDescriptor = new SecurityTokenDescriptor

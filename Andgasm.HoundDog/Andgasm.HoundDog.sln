@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abstractions", "Abstraction
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A53684BF-A540-47F9-B758-4525DCDCF525}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andgams.HoundDog.AccountManagement.Tests", "Andgams.HoundDog.AccountManagement.Tests\Andgams.HoundDog.AccountManagement.Tests.csproj", "{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{758B3C2D-4602-4936-948A-C2AB8DC4D59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{758B3C2D-4602-4936-948A-C2AB8DC4D59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{758B3C2D-4602-4936-948A-C2AB8DC4D59C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{A73FB0EE-E598-4ABD-AED0-C1753FFF0C38} = {A53684BF-A540-47F9-B758-4525DCDCF525}
 		{0AEE61BE-0F81-4E9C-ADD6-DA1EE5A886E1} = {05AAC36D-485F-407A-BE93-67679B410829}
 		{758B3C2D-4602-4936-948A-C2AB8DC4D59C} = {05AAC36D-485F-407A-BE93-67679B410829}
+		{FC37E45E-C10D-4CC2-8260-C9CA711C7F16} = {05AAC36D-485F-407A-BE93-67679B410829}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD000218-AE8B-453B-A835-637110E5552E}

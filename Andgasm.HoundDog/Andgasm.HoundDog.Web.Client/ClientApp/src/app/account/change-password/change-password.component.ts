@@ -182,6 +182,8 @@ export class ChangePasswordComponent implements OnInit {
   resetFormState() {
 
     this.errors = [];
+    this.passwordChangeData = {} as ChangePasswordViewModel;
+
     this.isRequesting = false;
     this.submitted = false;
     this.formMode = this.originalFormMode;

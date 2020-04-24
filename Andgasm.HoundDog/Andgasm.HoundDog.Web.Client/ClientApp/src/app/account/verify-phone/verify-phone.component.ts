@@ -36,10 +36,14 @@ export class VerifyPhoneComponent implements OnInit {
     this.phoneService.sendPhoneVerificationCode()
       .pipe(finalize(() => this.isRequesting = false))
       .subscribe(
-        result => {
-          this.isRequesting = false
+          result => {
+              this.toastrService.success('We have successfully send a verification code to your registered phone number. Please ener this code to complete your verification!', 'Verification Code Sent!');
+              this.isRequesting = false
         },
-        errors => { this.errors = errors; });
+          errors => {
+              this.toastrService.error('There was an error while trying to send a verification code to your registered phone number. Please confirm your phone number is correct and try the resend code link below.', 'Verification Code Not Sent!');
+              this.errors = errors;
+          });
   }
 
   verifyPhoneVerificationCode() {
