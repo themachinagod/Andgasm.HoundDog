@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Andgasm.HoundDog.AccountManagement.Database;
 using AutoMapper;
 
-namespace Andgasm.HoundDog.AccountManagement.Core
+namespace Andgasm.HoundDog.AccountManagement.Core.AuthManagement
 {
     public class UserAuthenticationManager : IUserAuthenticationManager
     {
@@ -56,10 +56,8 @@ namespace Andgasm.HoundDog.AccountManagement.Core
                 return (userdto, null);
             }
             else if (signinresult.IsLockedOut) return (null, new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedPassword), "This account is locked!"));
-            else if (signinresult.IsNotAllowed) return (null, new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedPassword), "Sign-ins on this account have been disabled!"));
             else 
             {
-                if (_signinManager.UserManager.SupportsUserLockout) await _signinManager.UserManager.AccessFailedAsync(user);
                 return (null, new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedPassword), "Specified password is not correct for user!"));
             }
         }

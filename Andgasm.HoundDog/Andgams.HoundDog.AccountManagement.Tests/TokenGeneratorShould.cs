@@ -1,4 +1,4 @@
-using Andgasm.HoundDog.AccountManagement.Core;
+using Andgasm.HoundDog.AccountManagement.Core.AuthManagement;
 using Andgasm.HoundDog.AccountManagement.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Moq;

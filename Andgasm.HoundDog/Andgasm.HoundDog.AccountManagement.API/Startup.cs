@@ -21,9 +21,9 @@ using Andgasm.HoundDog.AccountManagement.Database;
 using AutoMapper;
 using Andgasm.HoundDog.AccountManagement.Mapping;
 using System.Reflection;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Andgasm.HoundDog.AccountManagement.Core.AuthManagement;
 
 namespace Andgasm.HoundDog.AccountManagment.API
 {

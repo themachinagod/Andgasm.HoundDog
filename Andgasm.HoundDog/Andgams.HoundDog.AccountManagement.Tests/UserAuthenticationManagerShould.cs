@@ -1,4 +1,4 @@
-using Andgasm.HoundDog.AccountManagement.Core;
+using Andgasm.HoundDog.AccountManagement.Core.AuthManagement;
 using Andgasm.HoundDog.AccountManagement.Database;
 using Andgasm.HoundDog.AccountManagement.Interfaces;
 using AutoMapper;
@@ -23,11 +23,43 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             UserName = "TestUser",
             Email = "TestUser@TestEmail.com",
         };
+        HoundDogUser _testUser2FA = new HoundDogUser()
+        {
+            UserName = "TestUser2",
+            Email = "TestUser@TestEmail.com",
+            TwoFactorEnabled = true
+        };
         UserDTO _testUserDto = new UserDTO()
         {
             UserName = "TestUser",
             Email = "TestUser@TestEmail.com",
         };
+        #endregion
+
+        #region Determine 2FA Status Tests
+        [Fact]
+        public async Task SuccessfullyDetermineTrue2FAStatus_WhenValidUsernameSupplied()
+        {
+            var _authmanager = InitialiseAuthenticationManager();
+            var result = await _authmanager.UsernameRequires2FAVerification("TestUser2");
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SuccessfullyDetermineFalse2FAStatus_WhenValidUsernameSupplied()
+        {
+            var _authmanager = InitialiseAuthenticationManager();
+            var result = await _authmanager.UsernameRequires2FAVerification("TestUser");
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ReturnFalse2FAStatus_WhenInvalidUsernameSupplied()
+        {
+            var _authmanager = InitialiseAuthenticationManager();
+            var result = await _authmanager.UsernameRequires2FAVerification("TestUserInvalid");
+            Assert.False(result);
+        }
         #endregion
 
         #region Basic Authenticate Tests
@@ -149,6 +181,9 @@ namespace Andgams.HoundDog.AccountManagement.Tests
 
             mgr.Setup(x => x.FindByNameAsync(_testUser.UserName)).ReturnsAsync(_testUser); // allow search by username
             mgr.Setup(x => x.GetRolesAsync(_testUser)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
+
+            mgr.Setup(x => x.FindByNameAsync(_testUser2FA.UserName)).ReturnsAsync(_testUser2FA); // allow search by username
+            mgr.Setup(x => x.GetRolesAsync(_testUser2FA)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
 
             return mgr;
         }
