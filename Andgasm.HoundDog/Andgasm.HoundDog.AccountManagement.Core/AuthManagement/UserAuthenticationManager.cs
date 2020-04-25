@@ -14,8 +14,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
     {
         #region Fields
         private readonly IConfiguration _config;
-        private readonly ILogger<UserManager> _logger;
-        private readonly UserManager<HoundDogUser> _userManager;
+        private readonly ILogger<UserAuthenticationManager> _logger;
         private readonly SignInManager<HoundDogUser> _signinManager;
         private readonly IUserTwoFactorAuthManager _userauthManager;
         private readonly IMapper _mapper;
@@ -23,15 +22,13 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         #region Constructor
         public UserAuthenticationManager(IConfiguration config,
-                                         ILogger<UserManager> logger,
+                                         ILogger<UserAuthenticationManager> logger,
                                          IMapper mapper,
                                          IUserTwoFactorAuthManager userauthManager,
-                                         UserManager<HoundDogUser> userManager,
                                          SignInManager<HoundDogUser> signinManager)
         {
             _config = config;
             _logger = logger;
-            _userManager = userManager;
             _signinManager = signinManager;
             _mapper = mapper;
             _userauthManager = userauthManager;
@@ -62,7 +59,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
             else if (signinresult.IsNotAllowed) return (null, new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedPassword), "Sign-ins on this account have been disabled!"));
             else 
             {
-                if (_userManager.SupportsUserLockout) await _userManager.AccessFailedAsync(user);
+                if (_signinManager.UserManager.SupportsUserLockout) await _signinManager.UserManager.AccessFailedAsync(user);
                 return (null, new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedPassword), "Specified password is not correct for user!"));
             }
         }
@@ -78,15 +75,15 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         private async Task<UserDTO> MapUserToDTOWithRoles(HoundDogUser user)
         {
             var userdto = _mapper.Map<UserDTO>(user);
-            userdto.Roles = string.Join(", ", await _userManager.GetRolesAsync(user));
+            userdto.Roles = string.Join(", ", await _signinManager.UserManager.GetRolesAsync(user));
             return userdto;
         }
 
         private async Task<HoundDogUser> FindUserForIdentifier(string useridentifier)
         {
-            var user = await _userManager.FindByNameAsync(useridentifier);
-            if (user == null) user = await _userManager.FindByEmailAsync(useridentifier);
-            if (user == null) user = await _userManager.FindByIdAsync(useridentifier);
+            var user = await _signinManager.UserManager.FindByNameAsync(useridentifier);
+            if (user == null) user = await _signinManager.UserManager.FindByEmailAsync(useridentifier);
+            if (user == null) user = await _signinManager.UserManager.FindByIdAsync(useridentifier);
             return user;
         }
     }
