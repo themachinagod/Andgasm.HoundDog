@@ -1,5 +1,4 @@
 ﻿using Andgasm.HoundDog.AccountManagement.Interfaces;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
@@ -70,6 +69,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core.AuthManagement
         }
         #endregion
 
+        #region Mappings
         private async Task<UserDTO> MapUserToDTOWithRoles(HoundDogUser user)
         {
             var userdto = _mapper.Map<UserDTO>(user);
@@ -84,5 +84,6 @@ namespace Andgasm.HoundDog.AccountManagement.Core.AuthManagement
             if (user == null) user = await _signinManager.UserManager.FindByIdAsync(useridentifier);
             return user;
         }
+        #endregion
     }
 }

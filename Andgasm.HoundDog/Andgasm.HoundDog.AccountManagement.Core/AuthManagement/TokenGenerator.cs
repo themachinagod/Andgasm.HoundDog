@@ -10,13 +10,18 @@ namespace Andgasm.HoundDog.AccountManagement.Core.AuthManagement
 {
     public class TokenGenerator : ITokenGenerator
     {
+        #region Fields
         private readonly IConfiguration _config;
+        #endregion
 
+        #region Constructors
         public TokenGenerator(IConfiguration config)
         {
             _config = config;
         }
+        #endregion
 
+        #region Token Generation
         public string GenerateToken(UserDTO authenticateduser)
         {
             if (authenticateduser == null || string.IsNullOrWhiteSpace(authenticateduser.UserName) || authenticateduser.Id == Guid.Empty || string.IsNullOrWhiteSpace(authenticateduser.Roles))
@@ -38,5 +43,6 @@ namespace Andgasm.HoundDog.AccountManagement.Core.AuthManagement
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        #endregion
     }
 }
