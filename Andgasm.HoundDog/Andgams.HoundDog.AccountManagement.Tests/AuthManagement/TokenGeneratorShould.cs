@@ -12,11 +12,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
         [Fact]
         public void GenerateValidToken_WhenValidUserRecieved()
         {
-            var _config =  new Mock<IConfiguration>();
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
-            
-            TokenGenerator tg = new TokenGenerator(_config.Object);
+            var tg = InitialiseTokenGenerator();
             var usrid = Guid.NewGuid();
             var user = new UserDTO()
             {
@@ -32,11 +28,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
         
         public void ThrowException_WhenNoUserRecieved()
         {
-            var _config = new Mock<IConfiguration>();
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
-
-            TokenGenerator tg = new TokenGenerator(_config.Object);
+            var tg = InitialiseTokenGenerator();
             Exception ex = Assert.Throws<Exception>(() => tg.GenerateToken(null));
             Assert.Equal("User data must be supplied to generate token!", ex.Message);
         }
@@ -45,11 +37,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
 
         public void ThrowException_WhenNoUserNameRecieved()
         {
-            var _config = new Mock<IConfiguration>();
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
-
-            TokenGenerator tg = new TokenGenerator(_config.Object);
+            var tg = InitialiseTokenGenerator();
             var usrid = Guid.NewGuid();
             var user = new UserDTO()
             {
@@ -65,11 +53,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
 
         public void ThrowException_WhenNoUserIdRecieved()
         {
-            var _config = new Mock<IConfiguration>();
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
-
-            TokenGenerator tg = new TokenGenerator(_config.Object);
+            var tg = InitialiseTokenGenerator();
             var usrid = Guid.NewGuid();
             var user = new UserDTO()
             {
@@ -85,11 +69,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
 
         public void ThrowException_WhenNoUserRolesRecieved()
         {
-            var _config = new Mock<IConfiguration>();
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
-            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
-
-            TokenGenerator tg = new TokenGenerator(_config.Object);
+            var tg = InitialiseTokenGenerator();
             var usrid = Guid.NewGuid();
             var user = new UserDTO()
             {
@@ -99,6 +79,14 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             };
             Exception ex = Assert.Throws<Exception>(() => tg.GenerateToken(null));
             Assert.Equal("User data must be supplied to generate token!", ex.Message);
+        }
+
+        private TokenGenerator InitialiseTokenGenerator()
+        {
+            var _config = new Mock<IConfiguration>();
+            _config.Setup(x => x.GetSection(ITokenGenerator.TokenConfigName).Value).Returns("Fu5pvu7yW3uMRVRwXRo40l30mVsWC4tj");
+            _config.Setup(x => x.GetSection(ITokenGenerator.TokenExpiryConfigName).Value).Returns("1");
+            return new TokenGenerator(_config.Object);
         }
     }
 }
