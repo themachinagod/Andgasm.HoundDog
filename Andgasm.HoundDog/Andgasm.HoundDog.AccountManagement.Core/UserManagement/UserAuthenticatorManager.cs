@@ -16,17 +16,14 @@ namespace Andgasm.HoundDog.AccountManagement.Core
     public class UserAuthenticatorManager : IUserTwoFactorAuthManager
     {
         #region Fields
-        private readonly IConfiguration _config;
-        private readonly ILogger<UserManager> _logger;
+        private readonly ILogger<UserAuthenticatorManager> _logger;
         private readonly UserManager<HoundDogUser> _userManager;
         #endregion
 
         #region Constructor
-        public UserAuthenticatorManager(IConfiguration config,
-                                         ILogger<UserManager> logger,
+        public UserAuthenticatorManager(ILogger<UserAuthenticatorManager> logger,
                                          UserManager<HoundDogUser> userManager)
         {
-            _config = config;
             _logger = logger;
             _userManager = userManager;
         }
@@ -35,6 +32,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         #region 2FA Confirmation
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> ConfirmAuthenticatorCode(string userid, string token)
         {
+            if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
+                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id  and authenticator token to confirm authenticator code!") });
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
 
@@ -46,6 +46,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         public async Task<(AuthenticatorPayloadDTO GeneratedCode, FieldValidationErrorDTO Error)> GenerateAuthenticatorSharedKey(string userid)
         {
+            if (string.IsNullOrWhiteSpace(userid))
+                return (null, new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id to generate the shared key!"));
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (null, new FieldValidationErrorDTO(nameof(UserDTO.UserName), "Specified user does not exist!"));
             return await GenerateAuthenticatorSharedKey(user);
@@ -53,6 +56,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> Enable2FA(string userid, string token)
         {
+            if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrWhiteSpace(token))
+                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id & authenticator token to enable 2FA!") });
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
             if (user.TwoFactorEnabled) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user is already enrolled for 2FA!") });
@@ -72,6 +78,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         public async Task<(bool Success, IEnumerable<FieldValidationErrorDTO> Errors)> Disable2FA(string userid)
         {
+            if (string.IsNullOrWhiteSpace(userid))
+                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id to enable 2FA!") });
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
             if (!user.TwoFactorEnabled) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user is not enrolled for 2FA!") });

@@ -1,9 +1,6 @@
 using Andgasm.HoundDog.AccountManagement.Core;
-using Andgasm.HoundDog.AccountManagement.Core.AuthManagement;
 using Andgasm.HoundDog.AccountManagement.Database;
-using Andgasm.HoundDog.AccountManagement.Interfaces;
 using Andgasm.HoundDog.Core.Email.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -72,6 +69,8 @@ namespace Andgams.HoundDog.AccountManagement.Tests
         }
         #endregion
 
+        #region Confirm Email Tests
+
         [Fact]
         public async Task ConfirmEmail_WhenValidUserIdRecieved()
         {
@@ -118,6 +117,7 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             Assert.False(avatar.Succeeded);
             Assert.Equal("Fail", avatar.Errors.First().Description);
         }
+        #endregion
 
         #region Mock Helpers
         public Mock<UserManager<HoundDogUser>> MockUserManager()
