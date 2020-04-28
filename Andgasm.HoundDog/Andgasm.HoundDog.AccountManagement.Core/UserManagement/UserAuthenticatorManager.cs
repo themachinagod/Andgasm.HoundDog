@@ -1,13 +1,10 @@
 ﻿using Andgasm.HoundDog.AccountManagement.Interfaces;
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Collections.Generic;
 using Andgasm.HoundDog.API.Interfaces;
-using Andgasm.HoundDog.Core.Email.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Andgasm.HoundDog.AccountManagement.Database;
 using System.Text;
 
@@ -89,32 +86,21 @@ namespace Andgasm.HoundDog.AccountManagement.Core
             if (!disableresult.Succeeded) return (false, disableresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
 
             var resetresult =  await _userManager.ResetAuthenticatorKeyAsync(user);
-            if (!resetresult.Succeeded) return (false, disableresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
+            if (!resetresult.Succeeded) return (false, resetresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
 
             return (true, new List<FieldValidationErrorDTO>());
         }
 
         private async Task<(AuthenticatorPayloadDTO GeneratedCode, FieldValidationErrorDTO Error)> GenerateAuthenticatorSharedKey(HoundDogUser user)
         {
-            try
-            {
-                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                if (string.IsNullOrEmpty(unformattedKey))
-                {
-                    await _userManager.ResetAuthenticatorKeyAsync(user);
-                    unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-                }
-                var formattedkey = FormatKey(unformattedKey);
-                var qrcodeuri = GenerateQrCodeUri(user.Email, unformattedKey);
-                return (new AuthenticatorPayloadDTO() { SharedKey = formattedkey, QrCodeUri = qrcodeuri }, null);
-            }
-            catch (Exception ex)
-            {
-                return (null, new FieldValidationErrorDTO(string.Empty, ex.Message));
-            }
+            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            var formattedkey = FormatKey(unformattedKey);
+            var qrcodeuri = GenerateQrCodeUri(user.Email, unformattedKey);
+            return (new AuthenticatorPayloadDTO() { SharedKey = formattedkey, QrCodeUri = qrcodeuri }, null);
         }
         #endregion
 
+        #region Shared Key Helpers
         private string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
@@ -140,5 +126,6 @@ namespace Andgasm.HoundDog.AccountManagement.Core
                 email,
                 unformattedKey);
         }
+        #endregion
     }
 }

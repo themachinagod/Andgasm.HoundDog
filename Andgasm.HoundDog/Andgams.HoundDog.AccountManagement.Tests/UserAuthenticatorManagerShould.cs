@@ -19,14 +19,41 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             Id = "fd50153d-b51e-40de-a79c-1b933d78f420",
             UserName = "TestUser",
             Email = "TestUser@TestEmail.com",
-            ProfileAvatar = new byte[666]
+            ProfileAvatar = new byte[666],
+            TwoFactorEnabled = false
+        };
+        HoundDogUser _testUser2FA = new HoundDogUser()
+        {
+            Id = "bd50153d-b51e-40de-a79c-1b933d78f420",
+            UserName = "TestUser2FA",
+            Email = "TestUser@TestEmail.com",
+            ProfileAvatar = new byte[666],
+            TwoFactorEnabled = true
+            
         };
         HoundDogUser _testUserFail = new HoundDogUser()
         {
-            Id = "bb10153d-b51e-40de-a79c-1b933d78f420",
-            UserName = "TestUser",
+            Id = "cb10153d-b51e-40de-a79c-1b933d78f420",
+            UserName = "TestUserFail",
             Email = "TestUser@TestEmail.com",
-            ProfileAvatar = new byte[666]
+            ProfileAvatar = new byte[666],
+            TwoFactorEnabled = false
+        };
+        HoundDogUser _testUserFail2FA = new HoundDogUser()
+        {
+            Id = "db10153d-b51e-40de-a79c-1b933d78f420",
+            UserName = "TestUserFail2FA",
+            Email = "TestUser@TestEmail.com",
+            ProfileAvatar = new byte[666],
+            TwoFactorEnabled = true
+        };
+        HoundDogUser _testUserFail2FAK = new HoundDogUser()
+        {
+            Id = "eb10153d-b51e-40de-a79c-1b933d78f420",
+            UserName = "TestUserFail2FA",
+            Email = "TestUser@TestEmail.com",
+            ProfileAvatar = new byte[666],
+            TwoFactorEnabled = true
         };
         #endregion
 
@@ -145,12 +172,90 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             Assert.False(avatar.Succeeded);
             Assert.Equal("Specified user does not exist!", avatar.Errors.First().Description);
         }
+
+        [Fact]
+        public async Task ReportEnable2FAError_WhenUserEnabled2FA()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Enable2FA(_testUser2FA.Id, "999999");
+            Assert.False(avatar.Succeeded);
+            Assert.Equal("Specified user is already enrolled for 2FA!", avatar.Errors.First().Description);
+        }
+
+        [Fact]
+        public async Task ReportEnable2FAError_WhenEnableFails()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Enable2FA(_testUserFail.Id, "999999");
+            Assert.False(avatar.Succeeded);
+            Assert.Equal("Fail2FA", avatar.Errors.First().Description);
+        }
         #endregion
 
-        // TODO: Disable2FA tests
-        //       failed enable test
-        //       failed disable test
-        //       already 2fa enabled test
+        #region Disable 2FA Tests
+        [Fact]
+        public async Task Disable2FA_WhenValidUserIdAndCodeRecieved()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(_testUser2FA.Id);
+            Assert.True(avatar.Success);
+        }
+
+        [Fact]
+        public async Task ReportDisable2FAError_WhenNullUserIdAndValidCodeRecieved()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(null);
+            Assert.False(avatar.Success);
+            Assert.Equal("You must provide a user id to enable 2FA!", avatar.Errors.First().Description);
+        }
+
+        [Fact]
+        public async Task ReportDisable2FAError_WhenNonExistingUserIdAndValidCodeRecieved()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(Guid.NewGuid().ToString());
+            Assert.False(avatar.Success);
+            Assert.Equal("Specified user does not exist!", avatar.Errors.First().Description);
+        }
+
+        [Fact]
+        public async Task ReportDisable2FAError_WhenUserNotEnabled2FA()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(_testUser.Id);
+            Assert.False(avatar.Success);
+            Assert.Equal("Specified user is not enrolled for 2FA!", avatar.Errors.First().Description);
+        }
+
+        [Fact]
+        public async Task ReportDisable2FAError_WhenDisableFails()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(_testUserFail2FA.Id);
+            Assert.False(avatar.Success);
+            Assert.Equal("Fail2FA", avatar.Errors.First().Description);
+        }
+
+        [Fact]
+        public async Task ReportDisable2FAError_WhenResetKeysFails()
+        {
+            var usrmgr = MockUserManager();
+            var am = new UserAuthenticatorManager(new NullLogger<UserAuthenticatorManager>(), usrmgr.Object);
+            var avatar = await am.Disable2FA(_testUserFail2FAK.Id);
+            Assert.False(avatar.Success);
+            Assert.Equal("FailReset", avatar.Errors.First().Description);
+        }
+
+        #endregion
+
         #region Mock Helpers
         public Mock<UserManager<HoundDogUser>> MockUserManager()
         {
@@ -168,14 +273,32 @@ namespace Andgams.HoundDog.AccountManagement.Tests
             mgr.Setup(x => x.FindByIdAsync(_testUserFail.Id)).ReturnsAsync(_testUserFail); // allow search by username
             mgr.Setup(x => x.GetRolesAsync(_testUserFail)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
 
-            mgr.Setup(x => x.ResetAuthenticatorKeyAsync(_testUser)).ReturnsAsync(IdentityResult.Success); 
+            mgr.Setup(x => x.FindByIdAsync(_testUser2FA.Id)).ReturnsAsync(_testUser2FA); // allow search by username
+            mgr.Setup(x => x.GetRolesAsync(_testUser2FA)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
+
+            mgr.Setup(x => x.FindByIdAsync(_testUserFail2FA.Id)).ReturnsAsync(_testUserFail2FA); // allow search by username
+            mgr.Setup(x => x.GetRolesAsync(_testUserFail2FA)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
+
+            mgr.Setup(x => x.FindByIdAsync(_testUserFail2FAK.Id)).ReturnsAsync(_testUserFail2FAK); // allow search by username
+            mgr.Setup(x => x.GetRolesAsync(_testUserFail2FAK)).ReturnsAsync(new List<string>() { "User" }); // allow search of roles
+
+            mgr.Setup(x => x.ResetAuthenticatorKeyAsync(_testUser)).ReturnsAsync(IdentityResult.Success);
+            mgr.Setup(x => x.ResetAuthenticatorKeyAsync(_testUser2FA)).ReturnsAsync(IdentityResult.Success);
+            mgr.Setup(x => x.ResetAuthenticatorKeyAsync(_testUserFail2FAK)).ReturnsAsync(IdentityResult.Failed(new IdentityError() { Code = "FailReset", Description = "FailReset" }));
+
             mgr.Setup(x => x.GetAuthenticatorKeyAsync(_testUser)).ReturnsAsync("ANewCode");
 
             mgr.Setup(x => x.VerifyTwoFactorTokenAsync(_testUser, "Authenticator", "999999")).ReturnsAsync(true);
             mgr.Setup(x => x.VerifyTwoFactorTokenAsync(_testUser, "Authenticator", "123456")).ReturnsAsync(false);
+            mgr.Setup(x => x.VerifyTwoFactorTokenAsync(_testUserFail, "Authenticator", "999999")).ReturnsAsync(true);
 
             mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUser, true)).ReturnsAsync(IdentityResult.Success);
-            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUserFail, true)).ReturnsAsync(IdentityResult.Failed());
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUser, false)).ReturnsAsync(IdentityResult.Success);
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUser2FA, false)).ReturnsAsync(IdentityResult.Success);
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUser2FA, true)).ReturnsAsync(IdentityResult.Success);
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUserFail, true)).ReturnsAsync(IdentityResult.Failed(new IdentityError() { Code = "Fail2FA", Description = "Fail2FA" } ));
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUserFail2FA, false)).ReturnsAsync(IdentityResult.Failed(new IdentityError() { Code = "Fail2FA", Description = "Fail2FA" }));
+            mgr.Setup(x => x.SetTwoFactorEnabledAsync(_testUserFail2FAK, false)).ReturnsAsync(IdentityResult.Success);
             return mgr;
         }
         #endregion

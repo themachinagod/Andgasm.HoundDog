@@ -62,22 +62,15 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         private async Task<(bool Succeeded, FieldValidationErrorDTO Error)> GenerateEmailConfirmation(HoundDogUser user)
         {
-            try
-            {
-                var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var encodedtoken = HttpUtility.UrlEncode(confirmToken);
-                var callbackUrl = $"{_config.GetSection(IUserEmailManager.HostAPIBaseUrlConfigName)?.Value}api/user/{user.Id}/emailconfirmation?token={encodedtoken}";
-                var body = @$"<form method='post' action='{callbackUrl}' class='inline'" +
-                            $"  <label>Please click the below button to confirm your email address on your HoundDog account.</label><br />" +
-                            $"  <button type='submit' class='link-button'>I hereby confirm this email address to be my own</button>" +
-                            $"</form>";
-                await _emailer.SendEmailAsync(_config.GetSection(IUserEmailManager.SendingFromAddressConfigName)?.Value, user.Email, "HoundDog email verification request", body);
-                return (true, new FieldValidationErrorDTO());
-            }
-            catch (Exception ex)
-            {
-                return (false, new FieldValidationErrorDTO(string.Empty, ex.Message));
-            }
+            var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedtoken = HttpUtility.UrlEncode(confirmToken);
+            var callbackUrl = $"{_config.GetSection(IUserEmailManager.HostAPIBaseUrlConfigName)?.Value}api/user/{user.Id}/emailconfirmation?token={encodedtoken}";
+            var body = @$"<form method='post' action='{callbackUrl}' class='inline'" +
+                        $"  <label>Please click the below button to confirm your email address on your HoundDog account.</label><br />" +
+                        $"  <button type='submit' class='link-button'>I hereby confirm this email address to be my own</button>" +
+                        $"</form>";
+            await _emailer.SendEmailAsync(_config.GetSection(IUserEmailManager.SendingFromAddressConfigName)?.Value, user.Email, "HoundDog email verification request", body);
+            return (true, new FieldValidationErrorDTO());
         }
         #endregion
     }
