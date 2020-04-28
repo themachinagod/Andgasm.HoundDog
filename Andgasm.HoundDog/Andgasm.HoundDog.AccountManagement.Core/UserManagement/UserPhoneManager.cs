@@ -16,14 +16,14 @@ namespace Andgasm.HoundDog.AccountManagement.Core
     {
         #region Fields
         private readonly IConfiguration _config;
-        private readonly ILogger<UserManager> _logger;
+        private readonly ILogger<UserPhoneManager> _logger;
         private readonly ISMSVerification _smsverifier;
         private readonly UserManager<HoundDogUser> _userManager;
         #endregion
 
         #region Constructor
         public UserPhoneManager(IConfiguration config,
-                                         ILogger<UserManager> logger,
+                                         ILogger<UserPhoneManager> logger,
                                          ISMSVerification smsverify,
                                          UserManager<HoundDogUser> userManager)
         {
@@ -37,6 +37,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         #region Phone Confirmation
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> ConfirmPhoneNumber(string userid, string token)
         {
+            if (string.IsNullOrWhiteSpace(userid) || string.IsNullOrEmpty(token))
+                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id & verification token to confirm sms verification code!") });
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
             if (user.PhoneNumberConfirmed) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(string.Empty, "The phone number for this user account has already been confirmed!") });
@@ -54,6 +57,9 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         public async Task<(bool Succeeded, FieldValidationErrorDTO Error)> GeneratePhoneConfirmation(string userid)
         {
+            if (string.IsNullOrWhiteSpace(userid))
+                return (false, new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id  to genertae sms verification code!"));
+
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new FieldValidationErrorDTO(nameof(UserDTO.UserName), "Specified user does not exist!"));
             return await GeneratePhoneConfirmation(user);
@@ -61,18 +67,12 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
         private async Task<(bool Succeeded, FieldValidationErrorDTO Error)> GeneratePhoneConfirmation(HoundDogUser user)
         {
-            try
-            {
-                if (user.PhoneNumberConfirmed) return (false, new FieldValidationErrorDTO(string.Empty, "The user account phone number has already been confirmed!"));
+            if (user.PhoneNumberConfirmed) return (false, new FieldValidationErrorDTO(string.Empty, "The user account phone number has already been confirmed!"));
 
-                var sendsuccess = await _smsverifier.SendVerificationToPhoneNumber(user.PhoneNumber);
-                if (!sendsuccess) return (false, new FieldValidationErrorDTO(string.Empty, $"Could not send verification code to number {user.PhoneNumber}"));
-                return (true, new FieldValidationErrorDTO());
-            }
-            catch (Exception ex)
-            {
-                return (false, new FieldValidationErrorDTO(string.Empty, ex.Message));
-            }
+            var sendsuccess = await _smsverifier.SendVerificationToPhoneNumber(user.PhoneNumber);
+            if (!sendsuccess) return (false, new FieldValidationErrorDTO(string.Empty, $"Could not send verification code to number {user.PhoneNumber}"));
+            return (true, new FieldValidationErrorDTO());
+
         }
         #endregion
     }
