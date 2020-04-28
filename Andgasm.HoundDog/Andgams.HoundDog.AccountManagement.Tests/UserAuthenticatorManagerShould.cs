@@ -1,11 +1,6 @@
 using Andgasm.HoundDog.AccountManagement.Core;
-using Andgasm.HoundDog.AccountManagement.Core.AuthManagement;
 using Andgasm.HoundDog.AccountManagement.Database;
-using Andgasm.HoundDog.AccountManagement.Interfaces;
-using Andgasm.HoundDog.Core.Email.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using System;
