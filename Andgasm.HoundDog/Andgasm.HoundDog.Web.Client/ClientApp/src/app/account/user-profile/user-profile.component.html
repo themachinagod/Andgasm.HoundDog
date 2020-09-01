@@ -9,7 +9,7 @@
       <input type="hidden" name="id" [(ngModel)]="currentUser.id" #id="ngModel" />
 
       <div class="row">
-        <div class="col-md-8 mt-3">
+        <div class="col mt-3">
 
           <div class="form-group">
             <ng-template #userNameTipContent>Your username is how others will see and identify you while using the HoundDog portal.<br /> Your username must be unique within our userbase and must be between 6 - 16 characters in length.</ng-template>
@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div class="col-md-4 mt-4 p-0 m-0 pl-3 pr-5 text-center">
+        <div *ngIf="!isDataEntryMode && !sEditMode" class="col-md-4 mt-4 p-0 m-0 pl-3 pr-5 text-center">
           <div *ngIf="!isDataEntryMode && hasAvatar" class="text-center">
             <img class="img-fluid rounded-circle" [src]="avatarImageData" />
           </div>
@@ -121,7 +121,7 @@
         </div>
 
         <div class="form-group">
-          <ng-template #passwordConfirmTipContent>We use this to esnure you correctly typed your password.</ng-template>
+          <ng-template #passwordConfirmTipContent>We use this to ensure you correctly typed your password.</ng-template>
           <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="passwordConfirmTipContent" />
           <label for="passwordClearConfirm">Confirm Password</label>
           <input id="passwordClearConfirm" type="password" validateEqual="passwordClear" name="passwordClearConfirm" class="form-control" [disabled]="!isDataEntryMode" placeholder="Confirm Password"
@@ -133,9 +133,10 @@
       </div>
 
       <div class="form-group text-right">
-        <button *ngIf="isEditMode && !isCreateMode" type="button" (click)="resetFormState()" class="btn btn-outline-secondary"><i class='fa fa-edit'></i>Cancel</button>&nbsp;
-        <button *ngIf="!isDataEntryMode" type="button" (click)="changeToEditMode()" class="btn btn-outline-secondary"><i class='fa fa-edit'></i>Edit</button>
-        <button *ngIf="isDataEntryMode" type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">
+        <button *ngIf="isCreateMode" type="button" (click)="goBack()" class="btn btn-outline-secondary ml-2"><i class='fa fa-edit'></i>Cancel</button>
+        <button *ngIf="isEditMode" type="button" (click)="resetFormState()" class="btn btn-outline-secondary ml-2"><i class='fa fa-edit'></i>Cancel</button>
+        <button *ngIf="!isDataEntryMode" type="button" (click)="changeToEditMode()" class="btn btn-outline-secondary ml-2"><i class='fa fa-edit'></i>Edit</button>
+        <button *ngIf="isDataEntryMode" type="submit" class="btn btn-primary ml-2" [disabled]="f.invalid || isRequesting">
           <app-spinner [isRunning]="isRequesting" [displayText]="'Saving Profile'"></app-spinner>
           <span [hidden]="isRequesting">{{ !isCreateMode ? "Update Profile" : "Create Profile" }}</span>
         </button>

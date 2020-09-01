@@ -94,6 +94,11 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         private async Task<(AuthenticatorPayloadDTO GeneratedCode, FieldValidationErrorDTO Error)> GenerateAuthenticatorSharedKey(HoundDogUser user)
         {
             var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            if (string.IsNullOrEmpty(unformattedKey))
+            {
+                await _userManager.ResetAuthenticatorKeyAsync(user);
+                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+            }
             var formattedkey = FormatKey(unformattedKey);
             var qrcodeuri = GenerateQrCodeUri(user.Email, unformattedKey);
             return (new AuthenticatorPayloadDTO() { SharedKey = formattedkey, QrCodeUri = qrcodeuri }, null);

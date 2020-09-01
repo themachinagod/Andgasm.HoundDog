@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserAvatarService } from '../../shared/services/user.avatar.service';
 import { AvatarUploadComponent } from '../avatar-upload/avatar-upload.component';
 import { NgForm } from '@angular/forms';
+import { Location } from '@angular/common';
 import { finalize } from 'rxjs/operators';
 // #endregion
 
@@ -85,7 +86,9 @@ export class UserProfileComponent implements OnInit {
               private _toastrService: ToastrService,
               private _activatedroute: ActivatedRoute,
               private _modalService: NgbModal,
-              private _router: Router) {
+              private _router: Router,
+              private _location: Location
+  ) {
 
     this.errors = [];
   }
@@ -93,6 +96,7 @@ export class UserProfileComponent implements OnInit {
 
   // #region Initialise/Destroy
   ngOnInit() {
+
     this.readFormModeFromState();
     this.initialiseCurrentUser();
     this.getProfileImage()
@@ -173,10 +177,8 @@ export class UserProfileComponent implements OnInit {
 
   openProfileImageUploadModal() {
 
-    debugger;
     var modalRef = this._modalService.open(AvatarUploadComponent);
     modalRef.componentInstance.modalEventEmitter.subscribe((croppedimagedata) => {
-      debugger;
       this.avatarImageData = croppedimagedata;
       this.hasAvatar = true;
     })
@@ -228,8 +230,14 @@ export class UserProfileComponent implements OnInit {
     this.showPasswordChangeFields = false;
   }
 
-  resetFormState() {
+  goBack() {
+    
+    this._location.back();
+  }
 
+
+  resetFormState() {
+    debugger;
     this.errors = [];
     this.isRequesting = false;
     this.submitted = false;
