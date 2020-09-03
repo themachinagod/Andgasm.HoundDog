@@ -8,13 +8,13 @@
   </div>
 
   <div class="col">
-    <div [hidden]="selectedTabId != 'profile'">
+    <div *ngIf="selectedTabId == 'profile'">
       <user-profile [formMode]="'ViewOnly'"></user-profile>
     </div>
-    <div [hidden]="selectedTabId != 'security'">
+    <div *ngIf="selectedTabId == 'security'">
       <configure-2fa></configure-2fa>
     </div>
-    <div [hidden]="selectedTabId != 'password'">
+    <div *ngIf="selectedTabId == 'password'">
       <change-password [formMode]="'ViewOnly'"></change-password>
     </div>
   </div>

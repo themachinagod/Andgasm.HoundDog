@@ -37,7 +37,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abstractions", "Abstraction
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A53684BF-A540-47F9-B758-4525DCDCF525}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andgams.HoundDog.AccountManagement.Tests", "Andgams.HoundDog.AccountManagement.Tests\Andgams.HoundDog.AccountManagement.Tests.csproj", "{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andgams.HoundDog.AccountManagement.Tests", "Andgams.HoundDog.AccountManagement.Tests\Andgams.HoundDog.AccountManagement.Tests.csproj", "{FC37E45E-C10D-4CC2-8260-C9CA711C7F16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0BB8FEE5-87C1-4F49-A3CD-E4860E84716F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\UserEnable2FA-Flow.vsdx = Documentation\UserEnable2FA-Flow.vsdx
+		Documentation\UserRegistration-Flow.vsdx = Documentation\UserRegistration-Flow.vsdx
+		Documentation\UserResetPassword-Flow.vsdx = Documentation\UserResetPassword-Flow.vsdx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
