@@ -18,14 +18,28 @@ namespace Andgasm.HoundDog.Core.Email
 
         private readonly IConfiguration _config;
         private readonly ILogger<SmtpEmailSender> _logger;
+
+        private readonly SmtpClient _client;
+
         public SmtpEmailSender(IConfiguration config, 
                                ILogger<SmtpEmailSender> logger)
         {
             _config = config;
             _logger = logger;
+
+            _client = new SmtpClient()
+            {
+                Port = Convert.ToInt32(_config.GetSection(SmtpPortConfigName)?.Value),
+                EnableSsl = Convert.ToBoolean(_config.GetSection(SmtpUseSSLConfigName)?.Value),
+                Host = _config.GetSection(SmtpHostConfigName)?.Value,
+
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(_config.GetSection(SmtpHostAccountNameConfigName)?.Value,
+                                                    _config.GetSection(SmtpHostAccountPasswordConfigName)?.Value)
+            };
         }
 
-        public async Task SendEmailAsync(string from, string to, string subject, string body)
+        public async Task SendEmailAsync(string from, string to, string subject, string body, bool fireandforget)
         {
             var mail = new MailMessage()
             {
@@ -36,18 +50,8 @@ namespace Andgasm.HoundDog.Core.Email
             mail.IsBodyHtml = true;
             mail.To.Add(new MailAddress(to));
 
-            var client = new SmtpClient()
-            {
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Port = Convert.ToInt32(_config.GetSection(SmtpPortConfigName)?.Value),
-                EnableSsl = Convert.ToBoolean(_config.GetSection(SmtpUseSSLConfigName)?.Value), 
-                Host = _config.GetSection(SmtpHostConfigName)?.Value,
-
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(_config.GetSection(SmtpHostAccountNameConfigName)?.Value, 
-                                                    _config.GetSection(SmtpHostAccountPasswordConfigName)?.Value)
-            };
-            await client.SendMailAsync(mail);
+            if (fireandforget) _client.SendAsync(mail, null);
+            else await _client.SendMailAsync(mail);
         }
     }
 }

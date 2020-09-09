@@ -83,6 +83,7 @@ export class ForgotPasswordComponent implements OnInit {
             this.resetForm();
           },
           errors => {
+            debugger;
             this._toastrService.error('There was an error while trying to send your password reset link to your mail account. Please try again, if this problem continues please contact a member of our suppport team!', 'Password Reset Link Failed!');
             this.errors = errors;
           });

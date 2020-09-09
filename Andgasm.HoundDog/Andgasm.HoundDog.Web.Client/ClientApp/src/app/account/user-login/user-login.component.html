@@ -51,7 +51,7 @@
           <div class="form-group text-right">
             <button *ngIf="!requires2fachallenge" type="button" (click)="resetPassword()" class="btn-sm btn btn-link m-0 p-0">Forgotten Password</button>&nbsp;
             <button *ngIf="requires2fachallenge" type="button" (click)="cancelLoginOperation()" class="btn btn-outline-secondary"><i class='fa fa-edit'></i>Cancel</button>&nbsp;
-            <button *ngIf="!requires2fachallenge" type="button" class="btn btn-primary" [disabled]="isRequesting" (click)="provideBasicAuthDetails(f)">
+            <button *ngIf="!requires2fachallenge" type="submit" class="btn btn-primary" [disabled]="isRequesting" (click)="provideBasicAuthDetails(f)">
               <app-spinner [isRunning]="isRequesting" [displayText]="'Signing In'"></app-spinner>
               <span [hidden]="isRequesting">Sign In</span>
             </button>

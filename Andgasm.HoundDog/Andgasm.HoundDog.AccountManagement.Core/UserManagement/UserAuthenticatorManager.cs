@@ -48,6 +48,8 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (null, new FieldValidationErrorDTO(nameof(UserDTO.UserName), "Specified user does not exist!"));
+            if (!user.EmailConfirmed) return (null, new FieldValidationErrorDTO(nameof(UserDTO.UserName), "Specified user email must be confirmed!"));
+
             return await GenerateAuthenticatorSharedKey(user);
         }
 
@@ -58,6 +60,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
+            if (!user.EmailConfirmed) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user email must be confirmed!") });
             if (user.TwoFactorEnabled) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user is already enrolled for 2FA!") });
 
             var authresult = await ConfirmAuthenticatorCode(userid, token);
@@ -80,6 +83,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
             var user = await _userManager.FindByIdAsync(userid);
             if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
+            if (!user.EmailConfirmed) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user email must be confirmed!") });
             if (!user.TwoFactorEnabled) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user is not enrolled for 2FA!") });
 
             var disableresult = await _userManager.SetTwoFactorEnabledAsync(user, false);

@@ -69,7 +69,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
                         $"  <label>Please click the below button to confirm your email address on your HoundDog account.</label><br />" +
                         $"  <button type='submit' class='link-button'>I hereby confirm this email address to be my own</button>" +
                         $"</form>";
-            await _emailer.SendEmailAsync(_config.GetSection(IUserEmailManager.SendingFromAddressConfigName)?.Value, user.Email, "HoundDog email verification request", body);
+            await _emailer.SendEmailAsync(_config.GetSection(IUserEmailManager.SendingFromAddressConfigName)?.Value, user.Email, "HoundDog email verification request", body, true);
             return (true, new FieldValidationErrorDTO());
         }
         #endregion

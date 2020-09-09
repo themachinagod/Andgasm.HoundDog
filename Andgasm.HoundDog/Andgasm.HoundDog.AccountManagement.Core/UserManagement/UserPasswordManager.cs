@@ -41,24 +41,24 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         #region Password Change
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> ChangePassword(string userid, string oldpassword, string newpassword, string verifycode)
         {
-            if (string.IsNullOrWhiteSpace(userid)) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide user id to change your password!") });
+            if (string.IsNullOrWhiteSpace(userid)) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.OldPassword), "You must provide user id to change your password!") });
             if (string.IsNullOrWhiteSpace(oldpassword) || string.IsNullOrWhiteSpace(newpassword))
-                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide both old and new passwords in order to change your password!") });
+                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.OldPassword), "You must provide both old and new passwords in order to change your password!") });
 
             var user = await _userManager.FindByIdAsync(userid);
-            if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
+            if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.Username), "Specified user does not exist!") });
 
             if (user.TwoFactorEnabled)
             {
                 var tfaresult = await _userauthManager.ConfirmAuthenticatorCode(user.Id, verifycode);
-                if (!tfaresult.Succeeded) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.VerificationCode), "Your authentication code could not be validated!") });
+                if (!tfaresult.Succeeded) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.VerificationCode), "Your authentication code could not be validated!") });
             }
 
             var passchangeresult = await _userManager.ChangePasswordAsync(user, oldpassword, newpassword);
-            if (!passchangeresult.Succeeded) return (false, passchangeresult.Errors.Select(x => new FieldValidationErrorDTO(PasswordFieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
+            if (!passchangeresult.Succeeded) return (false, passchangeresult.Errors.Select(x => new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.OldPassword), x.Description)));
 
             var changeconfresult = await GeneratePasswordChangeNotification(user);
-            if (!changeconfresult.Succeeded) return (false, changeconfresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Key), x.Description)));
+            if (!changeconfresult.Succeeded) return (false, changeconfresult.Errors.Select(x => new FieldValidationErrorDTO(nameof(UserPasswordChangeDTO.OldPassword), x.Description)));
 
             return (true, new List<FieldValidationErrorDTO>());
         }
@@ -68,7 +68,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
             try
             {
                 // TODO: buid body
-                await _emailer.SendEmailAsync(_config.GetSection("AppSettings:SendingFromAddress")?.Value, user.Email, "HoundDog password change notification", "This is a notification to tell you that your password has been successfully changed, if you did not instigate this action please contact HoundDog security at once!");
+                await _emailer.SendEmailAsync(_config.GetSection("AppSettings:SendingFromAddress")?.Value, user.Email, "HoundDog password change notification", "This is a notification to tell you that your password has been successfully changed, if you did not instigate this action please contact HoundDog security at once!", true);
 
                 return (true, new List<FieldValidationErrorDTO>());
             }
@@ -127,7 +127,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
                 var encodedtoken = HttpUtility.UrlEncode(confirmToken); // WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmToken));
                 var callbackUrl = $"{_config.GetSection("WebClientLinks:BaseUrl")?.Value}resetpassword?userid={user.Id}&token={encodedtoken}";
                 var body = $"Please follow the below link to reset your password;\n\n{callbackUrl}";
-                await _emailer.SendEmailAsync(_config.GetSection("AppSettings:SendingFromAddress")?.Value, user.Email, "HoundDog password reset request", body);
+                await _emailer.SendEmailAsync(_config.GetSection("AppSettings:SendingFromAddress")?.Value, user.Email, "HoundDog password reset request", body, true);
                 return (true, new FieldValidationErrorDTO());
             }
             catch (Exception ex)

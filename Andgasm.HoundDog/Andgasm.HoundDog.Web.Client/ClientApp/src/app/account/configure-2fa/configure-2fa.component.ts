@@ -3,6 +3,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../shared/services/user.service';
 import { TwoFactorAuthenticationService } from '../../shared/services/twofactor.authentication.service';
+import { MailConfirmationService } from '../../shared/services/mail.confirmation.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs/operators';
 //#endregion
@@ -22,12 +23,14 @@ export class Configure2FAComponent implements OnInit {
   verificationCode: string;
   sharedKey: string = "invaliddata";
   userConfigured2FA: boolean;
+  userConfirmedEmail: boolean;
   // #endregion
 
   //#region Constructor
   constructor(
     private _userService: UserService,
     private _twofaService: TwoFactorAuthenticationService,
+    private _mailService: MailConfirmationService,
     private _toastrService: ToastrService,
     private _router: Router) {
 
@@ -101,11 +104,27 @@ export class Configure2FAComponent implements OnInit {
       .pipe(finalize(() => this.isRequesting = false))
       .subscribe(data => {
         this.userConfigured2FA = data.twoFactorEnabled;
-        if (!this.userConfigured2FA) {
+        this.userConfirmedEmail = data.emailConfirmed;
+        if (!this.userConfigured2FA && this.userConfirmedEmail) {
           this.getAuthenticatorSharedKey();
         }
       },
       errors => { this.errors = errors; });
   }
   // #endregion
+
+  // DBr: Mailer for resend of email conf - can we make this shared - its used on profile and now here!
+  resendEmailConfirmationEmail() {
+
+    this._mailService.resendEmailConfirmationNotification()
+      .pipe(finalize(() => this.isRequesting = false))
+      .subscribe(
+        result => {
+          this._toastrService.success('We have resent a confirmation email to your associated email address. Please follow the link contained within this email to complete the confirmation process. If you do not receive the confirmation email please check your junk folders before resending again!', 'Email Confirmation Resent!');
+        },
+        errors => {
+          this._toastrService.warning('We could not resend a confirmation email your accounts associated email address. Please try again later, if this problem continues please contact a member of our support team!', 'Email Confirmation Failed!');
+          this.errors = errors;
+        });
+  }
 }
