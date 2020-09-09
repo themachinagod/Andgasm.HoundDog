@@ -81,7 +81,6 @@ export class Configure2FAComponent implements OnInit {
   public openDisable2FAConfirmationDialog() {
     this._confirmationService.confirm('Please confirm you wish to disable 2FA', 'Are you sure you wish to disable Two-Factor Authentication on this account? It is our advice that all accounts enable 2FA to ensure adequate security is in place to protect your account. Note that you will be able to renable 2FA at any time.', "Yes, disable 2FA", "No, leave 2FA enabled", "lg")
       .then((confirmed) => { if (confirmed) this.disable2FA() })
-      .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
   }
 
   disable2FA() {
