@@ -1,9 +1,9 @@
 //#region Imports
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import { UserService } from '../../shared/services/user.service';
 import { TwoFactorAuthenticationService } from '../../shared/services/twofactor.authentication.service';
 import { MailConfirmationService } from '../../shared/services/mail.confirmation.service';
+import { ConfirmationService } from '../../shared/services/confirmation.service';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs/operators';
 //#endregion
@@ -32,7 +32,7 @@ export class Configure2FAComponent implements OnInit {
     private _twofaService: TwoFactorAuthenticationService,
     private _mailService: MailConfirmationService,
     private _toastrService: ToastrService,
-    private _router: Router) {
+    private _confirmationService: ConfirmationService) {
 
     this.errors = [];
   }
@@ -76,6 +76,12 @@ export class Configure2FAComponent implements OnInit {
           this._toastrService.error('There was an error while trying to configure two factor authentication. Please try again, if this problem continues please contact a member of our suppport team!', '2FA Configuration Failed!');
           this.errors = errors;
         });
+  }
+
+  public openDisable2FAConfirmationDialog() {
+    this._confirmationService.confirm('Please confirm you wish to disable 2FA', 'Are you sure you wish to disable Two-Factor Authentication on this account? <br/ >It is our advice that all accounts enable 2FA to ensure adequate security is in place to protect your account. Note that you will be able to renable 2FA at any time.', "Yes, disable 2FA", "No, leave 2FA enabled", "lg")
+      .then((confirmed) => { if (confirmed) this.disable2FA() })
+      .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
   }
 
   disable2FA() {

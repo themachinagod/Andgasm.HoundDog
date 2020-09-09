@@ -18,12 +18,15 @@ import { ConfigService } from './shared/utils/config.service';
 import { AuthenticationService } from './shared/services/authentication.service';
 
 import { routing } from './app.routing';
+import { ConfirmationComponent } from './shared/components/confirmation/confirmation.component';
+import { ConfirmationService } from './shared/services/confirmation.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    ConfirmationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -44,7 +47,7 @@ import { routing } from './app.routing';
     }),
     routing
   ],
-  providers: [ConfigService, AuthenticationService],
+  providers: [ConfigService, AuthenticationService, ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

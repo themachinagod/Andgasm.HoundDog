@@ -31,6 +31,7 @@ import { PasswordValidator } from '../shared/directives/password.validator.direc
 import { EqualValidator } from '../shared/directives/equal.validator.directive';
 
 import { routing } from './account.routing';
+import { ConfirmationComponent } from '../shared/components/confirmation/confirmation.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,6 @@ import { routing } from './account.routing';
   declarations: [AvatarUploadComponent, UserLoginComponent, ChangePasswordComponent, Configure2FAComponent, ForgotPasswordComponent, MailAddressConfirmationComponent, UserLoginComponent, UserProfileComponent, VerifyPhoneComponent,
                  EmailValidator, PasswordValidator, EqualValidator, AccountSettingsComponent],
   providers: [UserService, AuthenticationService, TokenService, PhoneConfirmationService, MailConfirmationService, TwoFactorAuthenticationService, UserAvatarService, UserPasswordService],
-  entryComponents: [AvatarUploadComponent]
+  entryComponents: [AvatarUploadComponent, ConfirmationComponent]
 })
 export class AccountModule { }
