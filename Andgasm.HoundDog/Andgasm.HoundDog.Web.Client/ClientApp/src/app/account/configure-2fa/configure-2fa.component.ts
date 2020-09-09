@@ -102,7 +102,7 @@ export class Configure2FAComponent implements OnInit {
   }
   //#endregion
 
-  // #region User Retrieval
+  // #region User Management
   initialiseUser2FAStatus() {
 
     this.isRequesting = true;
@@ -117,9 +117,7 @@ export class Configure2FAComponent implements OnInit {
       },
       errors => { this.errors = errors; });
   }
-  // #endregion
 
-  // DBr: Mailer for resend of email conf - can we make this shared - its used on profile and now here!
   resendEmailConfirmationEmail() {
 
     this._mailService.resendEmailConfirmationNotification()
@@ -133,4 +131,5 @@ export class Configure2FAComponent implements OnInit {
           this.errors = errors;
         });
   }
+  // #endregion
 }
