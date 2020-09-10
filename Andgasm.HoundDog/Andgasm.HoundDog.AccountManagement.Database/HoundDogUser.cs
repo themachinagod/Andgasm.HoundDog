@@ -8,6 +8,7 @@ namespace Andgasm.HoundDog.AccountManagement.Database
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Location { get; set; }
+        public DateTime DoB { get; set; }
         public DateTime RegisteredTimestamp { get; set; }
         public DateTime? EmailConfirmedTimestamp { get; set; }
         public byte[] ProfileAvatar { get; set; }
