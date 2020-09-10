@@ -11,7 +11,6 @@ using System.Transactions;
 using System.Security.Claims;
 using Andgasm.HoundDog.AccountManagement.Database;
 using AutoMapper;
-using System.Text.RegularExpressions;
 
 namespace Andgasm.HoundDog.AccountManagement.Core
 {
@@ -87,6 +86,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
                 {
                     var confirmmailresult = await _useremailmanager.GenerateEmailConfirmation(findresult.User.Id);
                     if (!confirmmailresult.Succeeded) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(confirmmailresult.Error.Key), confirmmailresult.Error.Description) });
+
                 }
 
                 scope.Complete();
@@ -108,6 +108,7 @@ namespace Andgasm.HoundDog.AccountManagement.Core
             if (userdata.HasChangeEmail)
             {
                 user.EmailConfirmed = false;
+                user.EmailConfirmedTimestamp = null;
                 user.Email = userdata.Email;
                 user.NormalizedEmail = userdata.Email.ToUpperInvariant();
             }
