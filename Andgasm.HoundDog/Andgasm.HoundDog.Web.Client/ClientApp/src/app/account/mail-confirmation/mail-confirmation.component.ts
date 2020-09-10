@@ -24,7 +24,7 @@ export class MailAddressConfirmationComponent implements OnInit {
 
   get confirmationResultBody(): string {
     if (this.success) {
-      return "Thank you for taking the time to confirm your email address, your account is now all ready for use.!";
+      return "Thank you for taking the time to confirm your email address, your account is now fully activated and all site functionality is unlocked for your use!";
     }
     else {
       return "Please try to follow the confirmation link that we sent to your mailbox, if this still fails please contact application support!";

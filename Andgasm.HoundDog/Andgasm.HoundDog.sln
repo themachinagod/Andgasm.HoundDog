@@ -41,6 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andgams.HoundDog.AccountMan
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0BB8FEE5-87C1-4F49-A3CD-E4860E84716F}"
 	ProjectSection(SolutionItems) = preProject
+		Documentation\UserConfirmEmail-Flow.vsdx = Documentation\UserConfirmEmail-Flow.vsdx
 		Documentation\UserEnable2FA-Flow.vsdx = Documentation\UserEnable2FA-Flow.vsdx
 		Documentation\UserRegistration-Flow.vsdx = Documentation\UserRegistration-Flow.vsdx
 		Documentation\UserResetPassword-Flow.vsdx = Documentation\UserResetPassword-Flow.vsdx

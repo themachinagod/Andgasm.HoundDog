@@ -91,6 +91,7 @@ export class Configure2FAComponent implements OnInit {
       .pipe(finalize(() => this.isRequesting = false))
       .subscribe(
         result => {
+          this.getAuthenticatorSharedKey();
           this._toastrService.success('You have successfully disabled 2FA on your account. Note that having 2FA configured on your account is reccomended and that by bypassing 2FA your account is less secure than it should be!', '2FA Disabled!');
           this.userConfigured2FA = false;
         },
