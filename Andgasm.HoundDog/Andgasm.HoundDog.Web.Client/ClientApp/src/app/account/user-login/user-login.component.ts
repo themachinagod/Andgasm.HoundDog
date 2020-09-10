@@ -1,5 +1,4 @@
 // #region Imports
-import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CredentialsViewModel } from '../../shared/models/credentials.viewmodel.interface';
@@ -24,12 +23,12 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   // #region Form State Fields
   errors: [];
   brandNew: boolean;
+  confirmedMail: boolean;
   isRequesting: boolean;
   submitted: boolean = false;
   requires2fachallenge: boolean = false;
   returnUrl: string;
   hasProvidedBasicLogin: boolean = false;
-  subscription: Subscription;
   credentials: CredentialsViewModel = {} as CredentialsViewModel;
   // #endregion
 
@@ -40,29 +39,27 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _toastrService: ToastrService) {
 
-   // this.toastaConfig.theme = 'bootstrap';
     this.errors = [];
-    if (this._authenticationService.isLoggedIn) {
-      this._router.navigate(['/dashboard']);
-    }
   }
   // #endregion
    
   // #region Initialise & Destroy
   ngOnInit() {
 
-    this.subscription = this._activatedRoute.queryParams.subscribe(
+    this._activatedRoute.queryParams.subscribe(
       (param: any) => {
         this.brandNew = param['brandNew'];
+        this.confirmedMail = param['confirmedMail'];
         this.credentials.username = param['email'];
       });
     this.returnUrl = this._activatedRoute.snapshot.queryParams['returnUrl'] || '/dashboard';
+
+    this.handleMailConfirmationSuccess();
+    this.redirectIfAuthenticated();
     this.determine2faStatus();
   }
 
   ngOnDestroy() {
-    // TODO: cleanup!!
-    //this.subscription.unsubscribe();
   }
   // #endregion
 
@@ -107,17 +104,34 @@ export class UserLoginComponent implements OnInit, OnDestroy {
 
   async determine2faStatus() {
 
-    if (this.credentials.username) {
+    if (!this._authenticationService.isLoggedIn && this.credentials.username) {
       return this._authenticationService.userNameRequires2FA(this.credentials.username).toPromise();
     }
   }
   // #endregion
 
-  // #region Reset
+  // #region Redirects
   resetPassword() {
+
     this._router.navigate(["/forgotpassword"]);
   }
 
+  handleMailConfirmationSuccess() {
+
+    if (this.confirmedMail) {
+      this._toastrService.success('Thank you for taking the time to confirm your email address, your account is now fully activated and all site functionality is unlocked for your use!', 'Successfully Confirmed Email!');
+    }
+  }
+
+  redirectIfAuthenticated() {
+
+    if (this._authenticationService.isLoggedIn) {
+      this._router.navigate(['/dashboard']);
+    }
+  }
+  // #endregion
+
+  // #region Reset
   cancelLoginOperation() {
     this.errors = [];
     this.isRequesting = false;

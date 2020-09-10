@@ -50,7 +50,6 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> CreateStandardUser(UserDTO userdata)
         {
             // TODO: hardcoded standard user role name!
-
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 var userresult = CreateUserAndMapToEntity(userdata);
@@ -58,6 +57,10 @@ namespace Andgasm.HoundDog.AccountManagement.Core
 
                 var createresult = await _userManager.CreateAsync(userresult.User, userdata.PasswordClear);
                 if (!createresult.Succeeded) return (false, createresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
+
+                userresult.User.RegisteredTimestamp = DateTime.UtcNow;
+                var updateresult = await _userManager.UpdateAsync(userresult.User);
+                if (!updateresult.Succeeded) return (false, updateresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
 
                 var rolesresult = await this._userManager.AddToRolesAsync(userresult.User, new[] { "User" }); 
                 if (!rolesresult.Succeeded) return (false, rolesresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));

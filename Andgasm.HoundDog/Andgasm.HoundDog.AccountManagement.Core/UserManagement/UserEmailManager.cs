@@ -10,6 +10,7 @@ using Andgasm.HoundDog.Core.Email.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Web;
 using Andgasm.HoundDog.AccountManagement.Database;
+using System.Transactions;
 
 namespace Andgasm.HoundDog.AccountManagement.Core
 {
@@ -38,16 +39,27 @@ namespace Andgasm.HoundDog.AccountManagement.Core
         #region Email Confirmation
         public async Task<(bool Succeeded, IEnumerable<FieldValidationErrorDTO> Errors)> ConfirmEmailAddress(string userid, string token)
         {
-            if (string.IsNullOrWhiteSpace(userid))
-                return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id to confirm email!") });
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                if (string.IsNullOrWhiteSpace(userid))
+                    return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserDTO.OldPasswordClear), "You must provide a user id to confirm email!") });
 
-            var user = await _userManager.FindByIdAsync(userid);
-            if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
+                var user = await _userManager.FindByIdAsync(userid);
+                if (user == null) return (false, new List<FieldValidationErrorDTO>() { new FieldValidationErrorDTO(nameof(UserSignInDTO.SuppliedUserName), "Specified user does not exist!") });
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (!result.Succeeded) return (false, result.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
+                if (!user.EmailConfirmed)
+                {
+                    var result = await _userManager.ConfirmEmailAsync(user, token);
+                    if (!result.Succeeded) return (false, result.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
 
-            return (true, new List<FieldValidationErrorDTO>());
+                    user.EmailConfirmedTimestamp = DateTime.UtcNow;
+                    var updateresult = await _userManager.UpdateAsync(user);
+                    if (!updateresult.Succeeded) return (false, updateresult.Errors.Select(x => new FieldValidationErrorDTO(FieldMappingHelper.MapErrorCodeToKey(x.Code), x.Description)));
+                }
+
+                scope.Complete();
+                return (true, new List<FieldValidationErrorDTO>());
+            }
         }
 
         public async Task<(bool Succeeded, FieldValidationErrorDTO Error)> GenerateEmailConfirmation(string userid)
