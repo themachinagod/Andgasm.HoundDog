@@ -44,6 +44,7 @@
     <None Remove="ClientApp\src\app\shared\services\authentication.service.ts" />
     <None Remove="ClientApp\src\app\shared\services\base.service.ts" />
     <None Remove="ClientApp\src\app\shared\services\confirmation.service.ts" />
+    <None Remove="ClientApp\src\app\shared\services\locale.service.ts" />
     <None Remove="ClientApp\src\app\shared\services\mail.confirmation.service.ts" />
     <None Remove="ClientApp\src\app\shared\services\phone.confirmation.service.ts" />
     <None Remove="ClientApp\src\app\shared\services\token.service.ts" />
@@ -104,6 +105,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\shared\modules\shared.module.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\shared\services\locale.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\shared\services\confirmation.service.ts">

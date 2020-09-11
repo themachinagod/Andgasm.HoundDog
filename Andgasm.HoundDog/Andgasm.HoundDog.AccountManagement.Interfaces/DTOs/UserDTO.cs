@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using System;
-using System.Collections.Generic;
 
 namespace Andgasm.HoundDog.AccountManagement.Interfaces
 {
@@ -30,6 +29,7 @@ namespace Andgasm.HoundDog.AccountManagement.Interfaces
         public bool TwoFactorEnabled { get; set; }
 
         public string Roles { get; set; }
+        public SimpleDate DoB { get; set; }
     }
 
     public class UserDTOValidator : AbstractValidator<UserDTO>
@@ -40,6 +40,7 @@ namespace Andgasm.HoundDog.AccountManagement.Interfaces
             RuleFor(x => x.LastName).NotEmpty();
             RuleFor(x => x.Email).NotEmpty();
             RuleFor(x => x.UserName).NotEmpty();
+            RuleFor(x => x.DoB).NotEmpty();
 
             RuleFor(x => x.Email).EmailAddress();
 

@@ -1,3 +1,5 @@
+import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+
 export interface UserProfileViewModel {
   id: string;
   email: string;
@@ -9,6 +11,7 @@ export interface UserProfileViewModel {
   userName: string;
   location: string;
   phoneNumber: string;
+  doB: NgbDateStruct;
 
   emailConfirmed: boolean;
   phoneNumberConfirmed: boolean;

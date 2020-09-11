@@ -1,7 +1,7 @@
 // #region Imports
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileViewModel } from '../../shared/models/user.profile.viewmodel.interface';
 import { UserService } from '../../shared/services/user.service';
 import { MailConfirmationService } from '../../shared/services/mail.confirmation.service';
@@ -10,7 +10,12 @@ import { UserAvatarService } from '../../shared/services/user.avatar.service';
 import { AvatarUploadComponent } from '../avatar-upload/avatar-upload.component';
 import { NgForm } from '@angular/forms';
 import { Location } from '@angular/common';
+import { LocaleService } from '../../shared/services/locale.service';
+import { formatDate } from '@angular/common';
+
 import { finalize } from 'rxjs/operators';
+
+import { getLocaleDateFormat, FormatWidth } from '@angular/common';
 // #endregion
 
 @Component({
@@ -87,7 +92,8 @@ export class UserProfileComponent implements OnInit {
               private _activatedroute: ActivatedRoute,
               private _modalService: NgbModal,
               private _router: Router,
-              private _location: Location
+    private _location: Location,
+    private _localeService: LocaleService
   ) {
 
     this.errors = [];
@@ -139,10 +145,16 @@ export class UserProfileComponent implements OnInit {
 
   updateUserProfile({ value }: { value: UserProfileViewModel }) {
 
+    debugger
+    var df = this._localeService.getUsersLocale("en-EN");
+    var df2 = getLocaleDateFormat(df, FormatWidth.Short);
+    var df3 = formatDate(new Date(), 'yyyy/MM/dd', 'en');
+    var df4 = formatDate(new Date(), df2, df);
     this._userService.updateProfile(value, this.showPasswordChangeFields)
       .pipe(finalize(() => this.isRequesting = false))
       .subscribe(
         result => {
+          debugger;
           if (result) {
             this._toastrService.success('You have successfully updated your account profile details!', 'Profile Updated!');
             this.currentUser.phoneNumberConfirmed = result.phoneNumberConfirmed;
@@ -194,7 +206,8 @@ export class UserProfileComponent implements OnInit {
         .pipe(finalize(() => this.isRequesting = false))
         .subscribe(
           data => {
-          if (data) {
+            if (data) {
+              debugger;
             this.initialiseUserData(data);
           }
         },
