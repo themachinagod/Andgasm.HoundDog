@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/modules/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { QRCodeModule } from 'angularx-qrcode';
 
@@ -38,8 +38,9 @@ import { ConfirmationComponent } from '../shared/components/confirmation/confirm
     CommonModule, FormsModule, SharedModule, BrowserAnimationsModule, NgbModule, ImageCropperModule, QRCodeModule, routing
   ],
   declarations: [AvatarUploadComponent, UserLoginComponent, ChangePasswordComponent, Configure2FAComponent, ForgotPasswordComponent, MailAddressConfirmationComponent, UserLoginComponent, UserProfileComponent, VerifyPhoneComponent,
-                 EmailValidator, PasswordValidator, EqualValidator, AccountSettingsComponent],
+    EmailValidator, PasswordValidator, EqualValidator, AccountSettingsComponent],
   providers: [UserService, AuthenticationService, TokenService, PhoneConfirmationService, MailConfirmationService, TwoFactorAuthenticationService, UserAvatarService, UserPasswordService],
+  exports: [NgbDatepicker],
   entryComponents: [AvatarUploadComponent, ConfirmationComponent]
 })
 export class AccountModule { }

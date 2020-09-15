@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,6 +20,7 @@ import { AuthenticationService } from './shared/services/authentication.service'
 import { routing } from './app.routing';
 import { ConfirmationComponent } from './shared/components/confirmation/confirmation.component';
 import { ConfirmationService } from './shared/services/confirmation.service';
+import { NgbDateCustomParserFormatter } from './shared/components/datepicker/NgbDateCustomParserFormatter';
 
 @NgModule({
   declarations: [

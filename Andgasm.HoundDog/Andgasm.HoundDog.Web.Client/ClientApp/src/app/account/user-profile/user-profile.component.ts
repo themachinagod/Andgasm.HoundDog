@@ -1,7 +1,7 @@
 // #region Imports
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileViewModel } from '../../shared/models/user.profile.viewmodel.interface';
 import { UserService } from '../../shared/services/user.service';
 import { MailConfirmationService } from '../../shared/services/mail.confirmation.service';
@@ -16,6 +16,8 @@ import { formatDate } from '@angular/common';
 import { finalize } from 'rxjs/operators';
 
 import { getLocaleDateFormat, FormatWidth } from '@angular/common';
+
+import { DatePickerComponent } from '../../shared/components/datepicker/datepicker.component';
 // #endregion
 
 @Component({
@@ -42,6 +44,7 @@ export class UserProfileComponent implements OnInit {
   hasAvatar: boolean;
   originalUserDataSnapshot: UserProfileViewModel = {} as UserProfileViewModel;
   currentUser: UserProfileViewModel = {} as UserProfileViewModel;
+  jimmy: any;
 
   private get isDataEntryMode(): boolean {
     if (this.formMode == "EditExisting" ||
@@ -145,16 +148,10 @@ export class UserProfileComponent implements OnInit {
 
   updateUserProfile({ value }: { value: UserProfileViewModel }) {
 
-    debugger
-    var df = this._localeService.getUsersLocale("en-EN");
-    var df2 = getLocaleDateFormat(df, FormatWidth.Short);
-    var df3 = formatDate(new Date(), 'yyyy/MM/dd', 'en');
-    var df4 = formatDate(new Date(), df2, df);
     this._userService.updateProfile(value, this.showPasswordChangeFields)
       .pipe(finalize(() => this.isRequesting = false))
       .subscribe(
         result => {
-          debugger;
           if (result) {
             this._toastrService.success('You have successfully updated your account profile details!', 'Profile Updated!');
             this.currentUser.phoneNumberConfirmed = result.phoneNumberConfirmed;

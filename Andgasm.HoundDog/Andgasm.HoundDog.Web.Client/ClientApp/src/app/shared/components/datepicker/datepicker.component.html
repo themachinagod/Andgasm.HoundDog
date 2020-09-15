@@ -1,0 +1,6 @@
+<div class="input-group">
+  <input class="form-control" placeholder="mm/dd/yyyy" [(ngModel)]="value" ngbDatepicker #dp="ngbDatepicker" [disabled]="!isDataEntryMode" [minDate]="{year: 1900, month: 1, day: 1}" [maxDate]="{year: 2020, month: 1, day: 1}" (dateSelect)="update($event)">
+  <div *ngIf="isDataEntryMode" class="input-group-append">
+    <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+  </div>
+</div>
