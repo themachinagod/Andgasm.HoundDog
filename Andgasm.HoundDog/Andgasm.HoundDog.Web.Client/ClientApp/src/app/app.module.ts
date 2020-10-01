@@ -20,7 +20,6 @@ import { AuthenticationService } from './shared/services/authentication.service'
 import { routing } from './app.routing';
 import { ConfirmationComponent } from './shared/components/confirmation/confirmation.component';
 import { ConfirmationService } from './shared/services/confirmation.service';
-import { NgbDateCustomParserFormatter } from './shared/components/datepicker/NgbDateCustomParserFormatter';
 
 @NgModule({
   declarations: [

@@ -26,7 +26,6 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\account\account.routing.ts" />
     <None Remove="ClientApp\src\app\app.routing.ts" />
-    <None Remove="ClientApp\src\app\shared\components\datepicker\NgbDateCustomParserFormatter.ts" />
     <None Remove="ClientApp\src\app\shared\directives\email.validator.directive.ts" />
     <None Remove="ClientApp\src\app\shared\directives\equal.validator.directive.ts" />
     <None Remove="ClientApp\src\app\shared\directives\focus.directive.ts" />
@@ -63,7 +62,6 @@
     <TypeScriptCompile Include="ClientApp\src\app\account\account.routing.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="ClientApp\src\app\shared\components\datepicker\NgbDateCustomParserFormatter.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\shared\directives\email.validator.directive.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
