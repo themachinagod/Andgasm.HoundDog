@@ -1,7 +1,7 @@
 // #region Imports
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileViewModel } from '../../shared/models/user.profile.viewmodel.interface';
 import { UserService } from '../../shared/services/user.service';
 import { MailConfirmationService } from '../../shared/services/mail.confirmation.service';
@@ -11,13 +11,7 @@ import { AvatarUploadComponent } from '../avatar-upload/avatar-upload.component'
 import { NgForm } from '@angular/forms';
 import { Location } from '@angular/common';
 import { LocaleService } from '../../shared/services/locale.service';
-import { formatDate } from '@angular/common';
-
 import { finalize } from 'rxjs/operators';
-
-import { getLocaleDateFormat, FormatWidth } from '@angular/common';
-
-import { DatePickerComponent } from '../../shared/components/datepicker/datepicker.component';
 // #endregion
 
 @Component({
@@ -114,7 +108,7 @@ export class UserProfileComponent implements OnInit {
 
   // #region User Management
   save({ value, valid }: { value: UserProfileViewModel, valid: boolean }) {
-
+    debugger;
     this.submitted = true;
 
     if (valid) {

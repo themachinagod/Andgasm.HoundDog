@@ -1,5 +1,3 @@
-import { NgbDate } from "@ng-bootstrap/ng-bootstrap";
-
 export interface UserProfileViewModel {
   id: string;
   email: string;
@@ -11,7 +9,7 @@ export interface UserProfileViewModel {
   userName: string;
   location: string;
   phoneNumber: string;
-  doB: NgbDate;
+  doB: SimpleDateViewModel;
 
   emailConfirmed: boolean;
   phoneNumberConfirmed: boolean;
@@ -19,4 +17,15 @@ export interface UserProfileViewModel {
   hasChangePassword: boolean;
 
   twoFactorEnabled: boolean;
+}
+
+export interface SimpleDateViewModel {
+  day: number,
+  month: number,
+  year: number
+}
+
+export interface SelectListItemViewModel {
+  id: number,
+  text: string
 }

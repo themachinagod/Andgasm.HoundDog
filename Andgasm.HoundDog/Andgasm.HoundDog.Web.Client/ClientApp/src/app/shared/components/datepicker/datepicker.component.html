@@ -1,6 +1,41 @@
-<div class="input-group">
-  <input class="form-control" placeholder="mm/dd/yyyy" [(ngModel)]="value" ngbDatepicker #dp="ngbDatepicker" [disabled]="!isDataEntryMode" [minDate]="{year: 1900, month: 1, day: 1}" [maxDate]="{year: 2020, month: 1, day: 1}" (dateSelect)="update($event)">
-  <div *ngIf="isDataEntryMode" class="input-group-append">
-    <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+<div *ngIf="isDataEntryMode" class="input-group row-cols-3">
+  <div class="col ml-0 pl-0">
+    <ng-template #yearvalTipContent>The year you were born.</ng-template>
+    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="yearvalTipContent" />
+    <label for="yearval">Year of Birth</label>
+    <select id="yearval" class="form-control" #yearval="ngModel" [(ngModel)]="value.year" (change)="updateYear(yearval.value)">
+      <option *ngFor="let item of let number of getYearListOptions()" [value]="item">
+        {{item}}
+      </option>
+    </select>
   </div>
+
+  <div class="col">
+    <ng-template #monthvalTipContent>The month of the year you were born.</ng-template>
+    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="monthvalTipContent" />
+    <label for="yearval">Month of Birth</label>
+    <select id="monthval" class="form-control" #monthval="ngModel" [(ngModel)]="value.month" (change)="updateMonth(monthval.value)">
+      <option *ngFor="let item of let number of months" [value]="item.id">
+        {{item.text}}
+      </option>
+    </select>
+  </div>
+
+  <div class="col mr-0 pr-0">
+    <ng-template #dayvalTipContent>The day of the month you were born.</ng-template>
+    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dayvalTipContent" />
+    <label for="yearval">Day of Birth</label>
+    <select id="dayval" class="form-control" #dayval="ngModel" [(ngModel)]="value.day" (change)="updateDay(dayval.value)">
+      <option *ngFor="let item of let number of getDayListOptions()" [value]="item">
+        {{item}}
+      </option>
+    </select>
+  </div>
+</div>
+
+<div *ngIf="!isDataEntryMode" class="form-group">
+  <ng-template #dobTipContent>Your date of birth may be used as a security question.<br /> Your date of birth name must be provided.</ng-template>
+  <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dobTipContent" />
+  <label for="doBirth">Date of Birth</label>
+  <input id="dp" class="form-control" [(ngModel)]="fomattedDate" #dp="ngModel" [disabled]="true">
 </div>
