@@ -19,6 +19,16 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   // #region Input Properties
   @Input() isDataEntryMode: boolean = true;
+
+  @Input() dayLabel: string = "Day";
+  @Input() monthLabel: string = "Month";
+  @Input() yearLabel: string = "Year";
+  @Input() viewOnlyLabel: string = "Date";
+
+  @Input() dayTooltip: string = "The day of the date";
+  @Input() monthTooltip: string = "The month of the date";
+  @Input() yearTooltip: string = "The year of the date";
+  @Input() viewOnlyTooltip: string = "Date";
   // #endregion
 
   // #region Form State Fields

@@ -62,7 +62,10 @@
       </div>
 
       <div class="form-group">
-          <app-date-picker id="doB" name="doB" [(ngModel)]="currentUser.doB" #doB="ngModel" [isDataEntryMode]="isDataEntryMode"></app-date-picker>
+          <app-date-picker id="doB" name="doB" [(ngModel)]="currentUser.doB" #doB="ngModel"
+                           [isDataEntryMode]="isDataEntryMode" [dayLabel]="'Day of Birth'" [monthLabel]="'Month of Birth'" [yearLabel]="'Year of Birth'" [viewOnlyLabel]="'Date of Birth'"
+                           [yearTooltip]="'The year you were born.'" [monthTooltip]="'The month of the year you were born.'" [dayTooltip]="'The day of the month you were born.'"
+                           [viewOnlyTooltip]="'Your date of birth may be used as a security question. Your date of birth must be provided.'"></app-date-picker>
       </div>
 
       <div class="form-group">

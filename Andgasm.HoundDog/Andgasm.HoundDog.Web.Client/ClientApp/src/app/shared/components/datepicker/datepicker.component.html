@@ -1,9 +1,9 @@
 <div *ngIf="isDataEntryMode" class="input-group row-cols-3">
   <div class="col ml-0 pl-0">
-    <ng-template #yearvalTipContent>The year you were born.</ng-template>
+    <ng-template #yearvalTipContent>{{yearTooltip}}</ng-template>
     <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="yearvalTipContent" />
-    <label for="yearval">Year of Birth</label>
-    <select id="yearval" class="form-control" #yearval="ngModel" [(ngModel)]="value.year" (change)="updateYear(yearval.value)">
+    <label for="yearval">{{yearLabel}}</label>
+    <select id="yearval" class="form-control" #yearval="ngModel" [(ngModel)]="value.year" (change)="updateYear(yearval.value)" required>
       <option *ngFor="let item of let number of getYearListOptions()" [value]="item">
         {{item}}
       </option>
@@ -11,10 +11,10 @@
   </div>
 
   <div class="col">
-    <ng-template #monthvalTipContent>The month of the year you were born.</ng-template>
+    <ng-template #monthvalTipContent>{{monthTooltip}}</ng-template>
     <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="monthvalTipContent" />
-    <label for="yearval">Month of Birth</label>
-    <select id="monthval" class="form-control" #monthval="ngModel" [(ngModel)]="value.month" (change)="updateMonth(monthval.value)">
+    <label for="yearval">{{monthLabel}}</label>
+    <select id="monthval" class="form-control" #monthval="ngModel" [(ngModel)]="value.month" (change)="updateMonth(monthval.value)" required>
       <option *ngFor="let item of let number of months" [value]="item.id">
         {{item.text}}
       </option>
@@ -22,10 +22,10 @@
   </div>
 
   <div class="col mr-0 pr-0">
-    <ng-template #dayvalTipContent>The day of the month you were born.</ng-template>
+    <ng-template #dayvalTipContent>{{dayTooltip}}</ng-template>
     <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dayvalTipContent" />
-    <label for="yearval">Day of Birth</label>
-    <select id="dayval" class="form-control" #dayval="ngModel" [(ngModel)]="value.day" (change)="updateDay(dayval.value)">
+    <label for="yearval">{{dayLabel}}</label>
+    <select id="dayval" class="form-control" #dayval="ngModel" [(ngModel)]="value.day" (change)="updateDay(dayval.value)" required>
       <option *ngFor="let item of let number of getDayListOptions()" [value]="item">
         {{item}}
       </option>
@@ -34,8 +34,8 @@
 </div>
 
 <div *ngIf="!isDataEntryMode" class="form-group">
-  <ng-template #dobTipContent>Your date of birth may be used as a security question.<br /> Your date of birth name must be provided.</ng-template>
+  <ng-template #dobTipContent>{{viewOnlyTooltip}}</ng-template>
   <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dobTipContent" />
-  <label for="doBirth">Date of Birth</label>
+  <label for="doBirth">{{viewOnlyLabel}}</label>
   <input id="dp" class="form-control" [(ngModel)]="fomattedDate" #dp="ngModel" [disabled]="true">
 </div>
