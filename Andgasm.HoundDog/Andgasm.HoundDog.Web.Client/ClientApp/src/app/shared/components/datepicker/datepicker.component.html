@@ -1,8 +1,8 @@
 <div *ngIf="isDataEntryMode" class="input-group row-cols-3">
   <div class="col ml-0 pl-0">
     <ng-template #yearvalTipContent>{{yearTooltip}}</ng-template>
-    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="yearvalTipContent" />
-    <label for="yearval">{{yearLabel}}</label>
+    <img *ngIf="showTooltips" src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="yearvalTipContent" />
+    <label *ngIf="showsubLabels" for="yearval">{{yearLabel}}</label>
     <select id="yearval" class="form-control" #yearval="ngModel" [(ngModel)]="value.year" (change)="updateYear(yearval.value)" required>
       <option *ngFor="let item of let number of getYearListOptions()" [value]="item">
         {{item}}
@@ -12,8 +12,8 @@
 
   <div class="col">
     <ng-template #monthvalTipContent>{{monthTooltip}}</ng-template>
-    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="monthvalTipContent" />
-    <label for="yearval">{{monthLabel}}</label>
+    <img *ngIf="showTooltips" src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="monthvalTipContent" />
+    <label *ngIf="showsubLabels" for="yearval">{{monthLabel}}</label>
     <select id="monthval" class="form-control" #monthval="ngModel" [(ngModel)]="value.month" (change)="updateMonth(monthval.value)" required>
       <option *ngFor="let item of let number of months" [value]="item.id">
         {{item.text}}
@@ -23,8 +23,8 @@
 
   <div class="col mr-0 pr-0">
     <ng-template #dayvalTipContent>{{dayTooltip}}</ng-template>
-    <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dayvalTipContent" />
-    <label for="yearval">{{dayLabel}}</label>
+    <img  *ngIf="showTooltips" src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dayvalTipContent" />
+    <label *ngIf="showsubLabels" for="yearval">{{dayLabel}}</label>
     <select id="dayval" class="form-control" #dayval="ngModel" [(ngModel)]="value.day" (change)="updateDay(dayval.value)" required>
       <option *ngFor="let item of let number of getDayListOptions()" [value]="item">
         {{item}}
@@ -35,7 +35,7 @@
 
 <div *ngIf="!isDataEntryMode" class="form-group">
   <ng-template #dobTipContent>{{viewOnlyTooltip}}</ng-template>
-  <img src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dobTipContent" />
-  <label for="doBirth">{{viewOnlyLabel}}</label>
+  <img  *ngIf="showTooltips" src="../../assets/icons/question_small_icon.png" class="mr-1" [ngbTooltip]="dobTipContent" />
+  <label *ngIf="showViewOnlyLabel" for="doBirth">{{viewOnlyLabel}}</label>
   <input id="dp" class="form-control" [(ngModel)]="fomattedDate" #dp="ngModel" [disabled]="true">
 </div>

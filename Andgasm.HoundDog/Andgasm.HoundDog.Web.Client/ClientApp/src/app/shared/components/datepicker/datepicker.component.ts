@@ -29,6 +29,12 @@ export class DatePickerComponent implements ControlValueAccessor {
   @Input() monthTooltip: string = "The month of the date";
   @Input() yearTooltip: string = "The year of the date";
   @Input() viewOnlyTooltip: string = "Date";
+
+  @Input() showTooltips: boolean = true;
+  @Input() showsubLabels: boolean = true;
+  @Input() showViewOnlyLabel: boolean = true;
+
+  @Input() viewModeDateFormat: string = "dd MMM yyyy";
   // #endregion
 
   // #region Form State Fields
@@ -37,6 +43,7 @@ export class DatePickerComponent implements ControlValueAccessor {
     { text: "July", id: 7 }, { text: "August", id: 8 }, { text: "September", id: 9 }, { text: "October", id: 10 }, { text: "November", id: 11 }, { text: "December", id: 12 }];
 
   private get fomattedDate(): string {
+    // TODO: we need to account for the specified format here
     if (this.value) {
       var result = this.value.day + ' ' + this.months[this.value.month - 1].text + ' ' + this.value.year;
       return result;
